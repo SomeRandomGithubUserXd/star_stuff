@@ -128,7 +128,7 @@ const submit = () => {
     player.currentSector = 3
   }
   let id = 0
-  for (const player of [...dsPlayers, ...lightSidePlayers.value]) {
+  for (const player of [...lightSidePlayers.value, ...dsPlayers]) {
     player.id = id++
   }
   game.value = new Game(era.value, map.value, lightSidePlayers.value, dsPlayers)
