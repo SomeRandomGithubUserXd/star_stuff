@@ -95,12 +95,8 @@ watch(era, value => {
   map.value = value.getMaps()[0]
 }, {deep: true})
 
-const lightSidePlayers = ref([
-  new Player(0, era.value.lightSideInstance(), "Nigga"),
-])
-const darkSidePlayers = ref([
-  new Player(1, era.value.darkSideInstance(), "Xyigga"),
-])
+const lightSidePlayers = ref([])
+const darkSidePlayers = ref([])
 
 const newPlayerModal = ref(false)
 const newPlayerSide = ref(null)
@@ -129,6 +125,15 @@ const submit = () => {
   const dsPlayers = darkSidePlayers.value
   for (const player of dsPlayers) {
     player.currentLocation = AbstractMap.lastLocationId
+    player.currentSector = 3
+  }
+  lightSidePlayers.value[0].id = 0
+  if(lightSidePlayers.value[1]) {
+    lightSidePlayers.value[1].id = 1
+  }
+  dsPlayers[0].id = 2
+  if(dsPlayers[1]) {
+    dsPlayers[1].id = 3
   }
   game.value = new Game(era.value, map.value, lightSidePlayers.value, dsPlayers)
 }

@@ -26,7 +26,7 @@ const storePlayer = () => {
     return
   }
   emit('update:modelValue', false)
-  emit('storePlayer', new Player(props.side, name.value))
+  emit('storePlayer', new Player(0, props.side, name.value))
   Toast.fire({
     icon: 'success',
     title: `<span class="text-indigo-600">${name.value}</span> играет за <span style="color: ${props.side.getColor()}">${props.side.getName}</span>!`,
