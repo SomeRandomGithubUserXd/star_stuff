@@ -127,13 +127,9 @@ const submit = () => {
     player.currentLocation = AbstractMap.lastLocationId
     player.currentSector = 3
   }
-  lightSidePlayers.value[0].id = 0
-  if(lightSidePlayers.value[1]) {
-    lightSidePlayers.value[1].id = 1
-  }
-  dsPlayers[0].id = 2
-  if(dsPlayers[1]) {
-    dsPlayers[1].id = 3
+  let id = 0
+  for (const player of [...dsPlayers, ...lightSidePlayers.value]) {
+    player.id = id++
   }
   game.value = new Game(era.value, map.value, lightSidePlayers.value, dsPlayers)
 }
