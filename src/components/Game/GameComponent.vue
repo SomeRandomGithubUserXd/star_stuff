@@ -11,6 +11,9 @@ import {Game} from "@/game/Game";
 import {onMounted, ref, watch} from "vue";
 import PlayerCard from "@/components/Game/PlayerCard.vue";
 import Location from "@/components/Game/Location.vue";
+import QuestModal from "@/components/Game/Quests/QuestModal.vue";
+import {QuestOption} from "@/game/Quests/QuestOption";
+import QuestCompletedModal from "@/components/Game/Quests/QuestCompletedModal.vue";
 
 const props = defineProps<{
   gameInstance: Game
@@ -18,18 +21,17 @@ const props = defineProps<{
 
 const game = ref(props.gameInstance)
 
-watch(game, value => {}, {deep: true})
-
-onMounted(() => {
-  const audio = new Audio(game.value.map.getSoundtrackPath())
-  audio.loop = true
-  // audio.play()
-})
+const handleQuestOptionSelect = (option: QuestOption) => {
+  game.value.endActiveQuest(option)
+}
 </script>
 
 
 <template>
   <div class="overlay" :style="{backgroundImage: `url(${game.map.getMapImage()})`}">
+    <quest-modal
+        @option-selected="handleQuestOptionSelect"
+        :instance="game.getActiveQuest()"/>
     <div class="flex flex-col w-full h-full" style="background: rgba(0,0,0,0.4)">
       <div class="flex w-full p-5 flex-col justify-center items-center" style="background: rgba(0,0,0,0.7);">
         <div class="text-white mb-5 text-center">
@@ -61,8 +63,9 @@ onMounted(() => {
             :instance="location"
             :players="game.getAllPlayers()"
             :game="game"
-            @move-to-sector="game.movePlayer(...$event, game.getCurrentPlayer())"
-            @discover="game.discoverArea($event, game.getCurrentPlayer())"
+            @move-to-sector="game.movePlayer(...$event)"
+            @discover="game.discoverArea($event)"
+            @apply-quest="game.applyQuest(...$event)"
             v-for="(location, key) in game.map.locations"/>
       </div>
     </div>

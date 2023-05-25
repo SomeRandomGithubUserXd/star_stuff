@@ -1,5 +1,5 @@
 // @ts-ignore
-import {locationsCount, shuffleArray} from "@/components/Traits/GameTrait";
+import {locationsCount, shuffleArray} from "@/traits/GameTrait";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
 import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AbandonedDroidStation";
 import {EmptyLocation} from "@/game/Locations/EmptyLocation";

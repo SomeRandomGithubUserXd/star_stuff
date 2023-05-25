@@ -8,16 +8,17 @@ export class EmptyLocation extends AbstractLocation
         return "Пустая локация";
     }
 
-    public getSectors(): [AbstractSector, AbstractSector, AbstractSector, AbstractSector] {
-        return [
-            new DefaultSector(),
-            new DefaultSector(),
-            new DefaultSector(),
-            new DefaultSector(),
-        ];
-    }
-
+    public sectors: [AbstractSector, AbstractSector, AbstractSector, AbstractSector] = [
+        new DefaultSector(this),
+        new DefaultSector(this),
+        new DefaultSector(this),
+        new DefaultSector(this)
+    ]
     getExpForExploring(): number {
         return 100;
+    }
+
+    getBackgroundImage(): string {
+        return "";
     }
 }

@@ -7,16 +7,18 @@ export class AbandonedDroidStation extends AbstractLocation {
         return "Заброшенная станция дройдов";
     }
 
-    public getSectors(): [AbstractSector, AbstractSector, AbstractSector, AbstractSector] {
-        return [
-            new DefaultSector(),
-            new DefaultSector(),
-            new DefaultSector(),
-            new DefaultSector(),
-        ];
-    }
+    public sectors: [AbstractSector, AbstractSector, AbstractSector, AbstractSector] = [
+        new DefaultSector(this),
+        new DefaultSector(this),
+        new DefaultSector(this),
+        new DefaultSector(this)
+    ]
 
     getExpForExploring(): number {
         return 500;
+    }
+
+    getBackgroundImage(): string {
+        return require("@/assets/pictures/locations/abandoned_droid_station.png");
     }
 }

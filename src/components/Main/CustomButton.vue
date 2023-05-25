@@ -21,7 +21,6 @@ button {
   --c: blue;
   color: white;
   font-size: 13px;
-  border: 0.3em solid #000;
   border-radius: 0.5em;
   text-transform: uppercase;
   font-weight: bold;
@@ -35,11 +34,6 @@ button {
   transition: 0.5s;
   background: #000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-button.btn-light {
-  background: darkblue;
-  border-color: darkblue;
 }
 
 button .service span {
@@ -56,7 +50,7 @@ button .service span {
 }
 
 button:hover {
-  border: 0.3em solid var(--c);
+  color: #fff !important;
 }
 
 button:hover .service span {

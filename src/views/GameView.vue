@@ -95,8 +95,12 @@ watch(era, value => {
   map.value = value.getMaps()[0]
 }, {deep: true})
 
-const lightSidePlayers = ref([])
-const darkSidePlayers = ref([])
+const lightSidePlayers = ref([
+    new Player(0, era.value.lightSideInstance(), "sus")
+])
+const darkSidePlayers = ref([
+  new Player(1, era.value.darkSideInstance(), "sas")
+])
 
 const newPlayerModal = ref(false)
 const newPlayerSide = ref(null)

@@ -6,7 +6,7 @@ import {Side} from "@/game/Sides/Side";
 import {ref, watch} from "vue";
 import InputField from "@/components/Main/InputField.vue";
 import CustomButton from "@/components/Main/CustomButton.vue";
-import {Toast} from '@/components/Traits/SwalTrait.js'
+import {Toast} from '@/traits/SwalTrait.js'
 
 const props = defineProps<{
   modelValue: boolean,
@@ -54,7 +54,7 @@ const storePlayer = () => {
                          leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
           <form
               @submit.prevent="storePlayer"
-              class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              class="inline-block align-bottom rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div class="bg-slate-700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="flex flex-col select-none">
                 <div class="mt-3 text-center w-full z-10">

@@ -109,3 +109,28 @@ img, video {
   font-family: 'Star Jedi', sans-serif;
 }
 
+.vue-simple-context-menu {
+  background: linear-gradient(0deg, #000, #272727);
+
+  * {
+    color: white !important;
+  }
+
+  .vue-simple-context-menu__item {
+    transition: all .2s;
+  }
+
+  .vue-simple-context-menu__item:hover {
+    background: blue;
+  }
+
+  .vue-simple-context-menu__item.disabled {
+    cursor: not-allowed;
+    opacity: .7;
+  }
+
+  .vue-simple-context-menu__item.disabled:hover {
+    background: transparent;
+  }
+}
+
