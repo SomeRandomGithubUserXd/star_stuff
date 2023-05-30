@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Side} from "@/game/Sides/Side";
-import {Player} from "@/game/Player";
-import PlayerCard from "@/components/Game/PlayerCard.vue";
+import {Player} from "@/game/Player/Player";
+import PlayerCard from "@/components/Game/Player/PlayerCard.vue";
 
 const props = defineProps<{
   side: Side

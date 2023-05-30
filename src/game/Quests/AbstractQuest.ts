@@ -1,6 +1,6 @@
 import {AbstractItem} from "@/game/Items/AbstractItem";
 import {QuestOption} from "@/game/Quests/QuestOption";
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 
 export abstract class AbstractQuest {
     public static readonly movesRequired: number = 1
@@ -15,13 +15,13 @@ export abstract class AbstractQuest {
 
     public abstract getSoundtrack(): string | null
 
-    protected assignedPlayer: Player | undefined
+    protected _assignedPlayer: Player | undefined
 
     public assignPlayer(player: Player): void {
-        this.assignedPlayer = player
+        this._assignedPlayer = player
     }
 
     public getAssignedPlayer(): Player | undefined {
-        return this.assignedPlayer
+        return this._assignedPlayer
     }
 }

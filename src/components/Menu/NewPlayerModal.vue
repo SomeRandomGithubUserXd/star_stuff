@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
 import {ExclamationCircleIcon} from '@heroicons/vue/24/outline'
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {Side} from "@/game/Sides/Side";
 import {ref, watch} from "vue";
 import InputField from "@/components/Main/InputField.vue";

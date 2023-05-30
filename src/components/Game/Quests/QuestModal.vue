@@ -6,37 +6,44 @@ import CustomButton from "@/components/Main/CustomButton.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import QuestCompletedModal from "@/components/Game/Quests/QuestCompletedModal.vue";
 import {QuestOption} from "@/game/Quests/QuestOption";
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
+import {Game} from "@/game/Game";
 
 const props = defineProps<{
-  instance: AbstractQuest | undefined,
+  game: Game,
 }>()
 
-const showModal = computed({
+const quest = computed({
   get() {
-    return !!props.instance
+    return props.game.getActiveQuest()
   }, set() {
   }
 })
 
-const emit = defineEmits(['optionSelected'])
+const showModal = computed({
+  get() {
+    return !!quest.value
+  }, set() {
+  }
+})
 
-const modalOption = ref(null)
+const modalConsequence = ref(null)
 
 const showCompletedModal = ref(false)
 
 const selectOption = (option: QuestOption) => {
-  modalOption.value = option
-  showCompletedModal.value = true
-  emit('optionSelected', option)
+  props.game.selectOption(option).then((result) => {
+    modalConsequence.value = result
+    showCompletedModal.value = true
+  })
 }
 </script>
 
 <template>
   <div>
-    <template v-if="modalOption">
+    <template v-if="modalConsequence">
       <quest-completed-modal
-          :instance="modalOption"
+          :instance="modalConsequence"
           v-model="showCompletedModal"/>
     </template>
     <TransitionRoot as="template" :show="showModal">
@@ -59,19 +66,19 @@ const selectOption = (option: QuestOption) => {
               <div
                   class="p-2 text-center bg-slate-800">
                 <h1 class="font-bold text-xl text-white">
-                  {{ props.instance?.getTitle() }}
+                  {{ quest?.getTitle() }}
                 </h1>
               </div>
               <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 bg-slate-700 text-white tracking-widest">
                 <div class="flex flex-col">
                   <div class="text-center w-full z-10">
                     <div>
-                      <img class="auto-img rounded-md" :src="props.instance?.getImage()"/>
+                      <img class="auto-img rounded-md" :src="quest?.getImage()"/>
                     </div>
                     <p
                         class="mt-5"
                         style="text-shadow: 0 0 10px rgba(0,0,0,0.5)"
-                        v-html="props.instance?.getText()"/>
+                        v-html="quest?.getText()"/>
                   </div>
                 </div>
               </div>
@@ -80,9 +87,13 @@ const selectOption = (option: QuestOption) => {
                                type="button"
                                @click.prevent="selectOption(option)"
                                :style="{backgroundColor: option.colorScheme[0] + ' !important', color: option.colorScheme[1]}"
-                               v-for="option in props.instance?.getOptions() || []">
+                               v-for="option in quest?.getOptions() || []">
                   <font-awesome-icon class="mr-2" :icon="`fa-solid fa-${option.icon.iconName}`"/>
                   {{ option.name }}
+                  <span class="text-base border-l-white pl-2 ml-1 border-solid border-l-2" v-if="option.requiresLvl">
+                    <font-awesome-icon class="mr-1" :icon="`fa-solid fa-jedi`"/>
+                    {{ option.requiresLvl }}
+                  </span>
                 </custom-button>
               </div>
             </form>

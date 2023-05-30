@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
 

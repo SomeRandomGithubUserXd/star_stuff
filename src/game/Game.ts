@@ -1,5 +1,5 @@
 import {AbstractEra} from "@/game/Eras/AbstractEra";
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {AbstractMap} from "@/game/Maps/AbstractMap";
 // @ts-ignore
 import {Toast} from "@/traits/SwalTrait";
@@ -11,6 +11,10 @@ import Location from "@/components/Game/Location.vue";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
 import {AbstractQuest} from "@/game/Quests/AbstractQuest";
 import {QuestOption} from "@/game/Quests/QuestOption";
+import {Fight} from "@/game/Fight/Fight";
+import {QuestOptionConsequence} from "@/game/Quests/QuestOptionConsequence";
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 export class Game {
     public mainAudio: HTMLAudioElement
@@ -29,8 +33,10 @@ export class Game {
 
     private activeQuest: AbstractQuest | null = null
 
+    private activeFight: Fight | null = null
+
     public setActiveQuest(quest: AbstractQuest): void {
-        quest.assignPlayer(Object.assign(Object.create(Object.getPrototypeOf(this.getCurrentPlayer())), this.getCurrentPlayer()))
+        quest.assignPlayer(this.getCurrentPlayer())
         this.activeQuest = quest
     }
 
@@ -38,7 +44,45 @@ export class Game {
         return this.activeQuest
     }
 
-    public endActiveQuest(option: QuestOption): void {
+    public selectOption(option: QuestOption): Promise<QuestOptionConsequence> {
+        return new Promise(async (resolve, reject) => {
+            let consequence
+            if (option.requiresLvl <= this.getCurrentPlayer().getLevel()) {
+                consequence = option.positiveConsequence
+            } else {
+                let successNumber = Math.abs(option.requiresLvl * 2 - this.getCurrentPlayer().getLevel()) * 10
+                if (successNumber >= 100) {
+                    successNumber = 95
+                }
+                const alertModalIsClosed = await Swal.fire({
+                    title: `Выпадение случайного числа`,
+                    html: `Вам должно попасться число, которое больше или равно ${successNumber}`,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+                if (alertModalIsClosed) {
+                    const number = Math.floor(Math.random() * (100 + 1));
+                    const infoModalIsClosed = await Swal.fire({
+                        title: `Ваше число:`,
+                        html: number,
+                        showConfirmButton: true
+                    })
+                    if (infoModalIsClosed) {
+                        if (number >= successNumber) {
+                            consequence = option.positiveConsequence
+                        } else {
+                            consequence = option.negativeConsequence
+                        }
+                    }
+                }
+            }
+            this.endActiveQuest(<QuestOptionConsequence>consequence)
+            resolve(<QuestOptionConsequence>consequence)
+        });
+    }
+
+    public endActiveQuest(consequence: QuestOptionConsequence) {
         if (this.activeQuest) {
             for (const location of this.map.locations) {
                 if (location.id === this.getCurrentPlayer().currentLocation) {
@@ -51,8 +95,8 @@ export class Game {
                 this.secondaryAudio = null
                 this.mainAudio.play()
             }
-            this.getCurrentPlayer().health = option.consequence.healthManipulation(this.getCurrentPlayer())
-            this.getCurrentPlayer().totalExp = option.consequence.expManipulation(this.getCurrentPlayer())
+            this.getCurrentPlayer().addHealth(consequence.addsHealth)
+            this.getCurrentPlayer().addTotalExp(consequence.addsExp)
             this.activeQuest = null
             this.subtractPlayerMoves(this.getCurrentPlayer(), AbstractQuest.movesRequired)
         }
@@ -154,7 +198,7 @@ export class Game {
         location.isDiscovered = true
         this.subtractPlayerMoves(player, 2)
         playSound(require("@/assets/audio/sfx/location_discovered.mp3"))
-        player.totalExp += location.getExpForExploring()
+        player.setTotalExp(player.getTotalExp() + AbstractLocation.expForExploring)
         Toast.fire({
             icon: 'success',
             title: `${getColoredPlayerSpan(player)} открывает <span class="text-indigo-300">${location.getName()}</span> и получает <span class="text-indigo-600">${location.getExpForExploring()} опыта</span>`,

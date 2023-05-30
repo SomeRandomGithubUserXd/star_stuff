@@ -68,7 +68,7 @@ import {RepublicEra} from "@/game/Eras/RepublicEra";
 import EraRadio from "@/components/Menu/EraRadio.vue";
 import {ImperialEra} from "@/game/Eras/ImperialEra";
 import MenuTeam from "@/components/Menu/MenuTeam.vue";
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {Side} from "@/game/Sides/Side";
 import NewPlayerModal from "@/components/Menu/NewPlayerModal.vue";
 import CustomButton from "@/components/Main/CustomButton.vue";
@@ -96,7 +96,7 @@ watch(era, value => {
 }, {deep: true})
 
 const lightSidePlayers = ref([
-    new Player(0, era.value.lightSideInstance(), "sus")
+    new Player(0, era.value.lightSideInstance(), "Test")
 ])
 const darkSidePlayers = ref([
   new Player(1, era.value.darkSideInstance(), "sas")

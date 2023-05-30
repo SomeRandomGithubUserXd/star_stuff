@@ -1,4 +1,4 @@
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 
 export type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
     ? Acc[number]

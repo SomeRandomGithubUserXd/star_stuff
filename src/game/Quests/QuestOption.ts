@@ -12,13 +12,27 @@ export class QuestOption {
 
     public icon: IconDefinition
 
-    public consequence: QuestOptionConsequence
+    public requiresLvl: number
 
-    constructor(quest: AbstractQuest, name: string, colorScheme: [string, string], icon: IconDefinition, consequence: QuestOptionConsequence) {
+    public positiveConsequence: QuestOptionConsequence
+
+    public negativeConsequence: QuestOptionConsequence | null
+
+    constructor(
+        quest: AbstractQuest,
+        requiresLvl: number,
+        name: string,
+        colorScheme: [string, string],
+        icon: IconDefinition,
+        positiveConsequence: QuestOptionConsequence,
+        negativeConsequence: QuestOptionConsequence | null = null
+    ) {
         this.quest = quest
+        this.requiresLvl = requiresLvl
         this.name = name
         this.colorScheme = colorScheme
         this.icon = icon
-        this.consequence = consequence
+        this.positiveConsequence = positiveConsequence
+        this.negativeConsequence = negativeConsequence
     }
 }

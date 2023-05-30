@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {computed, onMounted, ref, watch} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import PlayerIcon from "@/components/Game/PlayerIcon.vue";
+import PlayerIcon from "@/components/Game/Player/PlayerIcon.vue";
 import {Game} from "@/game/Game";
 import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'

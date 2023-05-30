@@ -2,7 +2,6 @@ import {AbstractSector} from "@/game/Locations/AbstractSector";
 import {AbstractQuest} from "@/game/Quests/AbstractQuest";
 import {DeadTrooperQuest} from "@/game/Quests/DeadTrooperQuest";
 import {IntRange} from "@/misc/Types";
-import {TestQuest} from "@/game/Quests/TestQuest";
 
 export class DefaultSector extends AbstractSector {
     public type(): number {
@@ -11,7 +10,7 @@ export class DefaultSector extends AbstractSector {
 
     questPool(): AbstractQuest[] {
         return [
-            new TestQuest()
+            new DeadTrooperQuest()
         ];
     }
 

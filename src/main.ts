@@ -20,10 +20,29 @@ import {
     faSackDollar,
     faWalkieTalkie,
     faPersonWalkingArrowLoopLeft,
-    faWandMagic
+    faWandMagic,
+    faShield,
+    faToolbox,
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faUserPlus, faUserCheck, faJedi, faHeart, faLock, faBolt, faEye, faQuestionCircle, faArrowsUpDownLeftRight, faSackDollar, faWalkieTalkie, faPersonWalkingArrowLoopLeft, faWandMagic)
+library.add(
+    faUsers,
+    faUserPlus,
+    faUserCheck,
+    faJedi,
+    faHeart,
+    faLock,
+    faBolt,
+    faEye,
+    faQuestionCircle,
+    faArrowsUpDownLeftRight,
+    faSackDollar,
+    faWalkieTalkie,
+    faPersonWalkingArrowLoopLeft,
+    faWandMagic,
+    faShield,
+    faToolbox,
+)
 
 createApp(App)
     .use(router)

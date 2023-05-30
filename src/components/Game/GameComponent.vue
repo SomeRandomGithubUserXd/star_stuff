@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import {Game} from "@/game/Game";
 import {onMounted, ref, watch} from "vue";
-import PlayerCard from "@/components/Game/PlayerCard.vue";
+import PlayerCard from "@/components/Game/Player/PlayerCard.vue";
 import Location from "@/components/Game/Location.vue";
 import QuestModal from "@/components/Game/Quests/QuestModal.vue";
 import {QuestOption} from "@/game/Quests/QuestOption";
@@ -20,37 +20,18 @@ const props = defineProps<{
 }>()
 
 const game = ref(props.gameInstance)
-
-const handleQuestOptionSelect = (option: QuestOption) => {
-  game.value.endActiveQuest(option)
-}
 </script>
 
 
 <template>
   <div class="overlay" :style="{backgroundImage: `url(${game.map.getMapImage()})`}">
-    <quest-modal
-        @option-selected="handleQuestOptionSelect"
-        :instance="game.getActiveQuest()"/>
+    <quest-modal :game="game"/>
     <div class="flex flex-col w-full h-full" style="background: rgba(0,0,0,0.4)">
-      <div class="flex w-full p-5 flex-col justify-center items-center" style="background: rgba(0,0,0,0.7);">
-        <div class="text-white mb-5 text-center">
-          <h1 class="text-special text-3xl">Galactic Assault</h1>
-          <div class="mt-3 text-xl">
-            <span class="font-bold"
-                  :style="{color: game.era.lightSideInstance().getColor()}">{{
-                game.era.lightSideInstance().getName
-              }}</span>
-            <span class="tracking-widest"> VS </span>
-            <span class="font-bold" :style="{color: game.era.darkSideInstance().getColor()}">{{
-                game.era.darkSideInstance().getName
-              }}</span>
-          </div>
-        </div>
-        <div class="z-10 w-full h-full flex justify-between gap-x-3">
+      <div class="flex w-full p-5 flex-col gap-y-3 justify-center items-center" style="background: rgba(0,0,0,0.7);">
+        <div class="z-10 w-full h-full flex justify-center gap-x-3">
           <player-card
               :is-compact="true"
-              class="w-full"
+              class="w-full max-w-screen-md"
               :class="game.currentPlayerIndex === player.id ? 'animated' : ''"
               style="max-height: 75px"
               v-for="player in game.getAllPlayers()"

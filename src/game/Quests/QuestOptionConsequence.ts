@@ -1,4 +1,4 @@
-import {Player} from "@/game/Player";
+import {Player} from "@/game/Player/Player";
 import {AbstractQuest} from "@/game/Quests/AbstractQuest";
 
 export class QuestOptionConsequence {
@@ -8,29 +8,25 @@ export class QuestOptionConsequence {
 
     public description: string
 
+    public addsHealth: number = 0
+
+    public addsExp: number = 0
+
     public image: string
-
-    public healthManipulation: (player: Player) => number
-
-    public expManipulation: (player: Player) => number
 
     constructor(
         quest: AbstractQuest,
         name: string,
         description: string,
-        healthManipulation: (player: Player) => number = (player) => {
-            return player.health
-        },
-        expManipulation: (player: Player) => number = (player) => {
-            return player.totalExp
-        },
+        addsHealth = 0,
+        addsExp = 0,
         image: string = ""
     ) {
         this.quest = quest
         this.name = name
         this.description = description
-        this.healthManipulation = healthManipulation
-        this.expManipulation = expManipulation
+        this.addsHealth = addsHealth
+        this.addsExp = addsExp
         this.image = image
     }
 }

@@ -9,7 +9,7 @@ import {onMounted, ref} from "vue";
 const props = defineProps<{
   from: number,
   to: number,
-  duration: number,
+  duration?: number,
   delay: number,
 }>()
 

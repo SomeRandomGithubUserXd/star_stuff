@@ -2,6 +2,8 @@ import {AbstractSector} from "@/game/Locations/AbstractSector";
 import {DefaultSector} from "@/game/Locations/DefaultSector";
 
 export abstract class AbstractLocation {
+    public static readonly expForExploring: number = 150
+
     public static readonly movesRequired: number = 2
 
     public id: number
