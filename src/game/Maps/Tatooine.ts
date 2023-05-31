@@ -19,7 +19,7 @@ export class Tatooine extends AbstractMap {
         return require("@/assets/audio/maps/geonosis.mp3");
     }
 
-    public getLocations(): AbstractLocation[] {
-        return [new AbandonedDroidStation(0)]
+    public getLocations(): (typeof AbstractLocation)[] {
+        return [AbandonedDroidStation]
     }
 }

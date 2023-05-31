@@ -4,15 +4,20 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import WeaponCard from "@/components/Game/Items/WeaponCard.vue";
 import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
+import PlayerInventoryModal from "@/components/Game/Player/PlayerInventoryModal.vue";
+import {ref} from "vue";
 
 const props = defineProps<{
   instance: Player,
   isCompact: false,
 }>()
+
+const showInventory = ref(false)
 </script>
 
 <template>
   <div class="needs-glowing select-none text-white flex items-end">
+    <player-inventory-modal :instance="props.instance.getInventoryInstance()" v-model="showInventory"/>
     <img class="auto-img" style="max-width: 90px !important;" :src="props.instance.side.character.icon">
     <div class="flex px-4 h-full w-full gap-3" v-if="props.isCompact">
       <div class="flex flex-col">
@@ -107,6 +112,7 @@ const props = defineProps<{
         <div class="flex items-center py-2 h-full w-full">
           <tippy class="w-full h-full" content="Инвентарь">
             <div
+                @click.prevent="showInventory = true"
                 class="flex click-sound items-center w-full h-full cursor-pointer rounded border-2 border-solid p-2 shadow border-green-500 w-full text-2xl items-center justify-center">
               <font-awesome-icon icon="fa-solid fa-toolbox"/>
             </div>

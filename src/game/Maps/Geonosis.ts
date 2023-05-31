@@ -16,11 +16,11 @@ export class Geonosis extends AbstractMap {
         return "Джеонозис";
     }
 
-    public getLocations(): AbstractLocation[] {
-        return [new AbandonedDroidStation(0)]
-    }
-
     getSoundtrackPath(): string {
         return require("@/assets/audio/maps/geonosis.mp3");
+    }
+
+    public getLocations(): (typeof AbstractLocation)[] {
+        return [AbandonedDroidStation]
     }
 }

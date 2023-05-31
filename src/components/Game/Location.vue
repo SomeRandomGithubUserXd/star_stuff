@@ -9,8 +9,9 @@ import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
 import VueSimpleContextMenu from 'vue-simple-context-menu/src/vue-simple-context-menu.vue'
 import "font-awesome/css/font-awesome.css"
-import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
 import EventIcon from "@/components/Game/Location/EventIcon.vue";
+import collect from "collect.js"
 
 const props = defineProps<{
   instance: AbstractLocation,
@@ -29,7 +30,9 @@ watch(() => props.players, value => {
 const refreshActivePlayers = () => {
   const players = []
   for (const player of props.players) {
-    if (player.currentLocation == props.instance.id) players.push(player)
+    for (const sector of props.instance.sectors) {
+      if (player.currentSector === sector?.id) players.push(player)
+    }
   }
   if (players.length) location.value.isDiscovered = true
   activePlayers.value = players
@@ -43,11 +46,11 @@ const emit = defineEmits(['moveToSector', 'discover', 'applyQuest'])
 
 const ctxMenus = ref(null)
 
-function handleClick(event: any, item: any, index: number) {
+function handleClick(event: any, item: any) {
   for (const menu of ctxMenus.value) {
     menu.hideContextMenu()
   }
-  ctxMenus.value[index].showMenu(event, item)
+  collect(ctxMenus.value).where('elementId', '==', 'sector-menu-' + item.id).first().showMenu(event, item)
 }
 
 
@@ -55,14 +58,14 @@ function optionClicked(event: any) {
   event.option.callback()
 }
 
-const getOptionsForSector = (sector: AbstractSector, key: number) => {
+const getOptionsForSector = (sector: AbstractSector) => {
   return [
     {
       name: `<i class="fa fa-question-circle mr-2"></i>Взять квест (${sector.quests.length})`,
       class: sector.quests.length ? '' : 'disabled',
       callback: () => {
         if (!sector.quests.length) return
-        emit('applyQuest', [sector.location.id, key, sector.quests[0]])
+        emit('applyQuest', sector)
       }
     }
   ]
@@ -74,16 +77,15 @@ const getOptionsForSector = (sector: AbstractSector, key: number) => {
     <tippy :content="location.isDiscovered ? location.getName() : '??????'">
       <div v-if="location.isDiscovered" class="content" :style="{background: `url(${location.getBackgroundImage()})`}">
         <div
-            @contextmenu.prevent.stop="handleClick($event, sector, key)"
-            @click="emit('moveToSector', [key, props.instance.id])"
+            @contextmenu.prevent.stop="handleClick($event, sector)"
+            @click="emit('moveToSector', sector)"
             class="border p-1 flex flex-col border-solid sector border-gray-400 flex overflow-hidden"
-            v-for="(sector, key) in location.sectors">
+            v-for="sector in location.sectors">
           <vue-simple-context-menu
-              :element-id="props.instance.id + '-' + key"
-              :options="getOptionsForSector(sector, key)"
+              :element-id="'sector-menu-' + sector.id"
+              :options="getOptionsForSector(sector, sector.id)"
               ref="ctxMenus"
-              @option-clicked="optionClicked"
-          />
+              @option-clicked="optionClicked"/>
           <div class="flex">
             <event-icon
                 v-if="sector.quests.length"
@@ -95,13 +97,13 @@ const getOptionsForSector = (sector: AbstractSector, key: number) => {
                 <player-icon
                     :is-current="props.game.currentPlayerIndex === player.id"
                     :instance="player"
-                    v-if="player.currentSector === key"/>
+                    v-if="player.currentSector === sector.id"/>
               </template>
             </template>
           </div>
         </div>
       </div>
-      <div v-else class="undiscovered" @click="emit('discover', props.instance.id)">
+      <div v-else class="undiscovered" @click="emit('discover', props.instance)">
         <font-awesome-icon class="icon-lock" icon="fas fa-lock"/>
       </div>
     </tippy>

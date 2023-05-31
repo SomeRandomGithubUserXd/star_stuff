@@ -12,8 +12,6 @@ import {onMounted, ref, watch} from "vue";
 import PlayerCard from "@/components/Game/Player/PlayerCard.vue";
 import Location from "@/components/Game/Location.vue";
 import QuestModal from "@/components/Game/Quests/QuestModal.vue";
-import {QuestOption} from "@/game/Quests/QuestOption";
-import QuestCompletedModal from "@/components/Game/Quests/QuestCompletedModal.vue";
 
 const props = defineProps<{
   gameInstance: Game
@@ -21,8 +19,6 @@ const props = defineProps<{
 
 const game = ref(props.gameInstance)
 </script>
-
-
 <template>
   <div class="overlay" :style="{backgroundImage: `url(${game.map.getMapImage()})`}">
     <quest-modal :game="game"/>
@@ -44,10 +40,10 @@ const game = ref(props.gameInstance)
             :instance="location"
             :players="game.getAllPlayers()"
             :game="game"
-            @move-to-sector="game.movePlayer(...$event)"
+            @move-to-sector="game.movePlayer($event)"
             @discover="game.discoverArea($event)"
-            @apply-quest="game.applyQuest(...$event)"
-            v-for="(location, key) in game.map.locations"/>
+            @apply-quest="game.applyQuest($event)"
+            v-for="location in game.map.locations"/>
       </div>
     </div>
   </div>

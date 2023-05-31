@@ -1,9 +1,16 @@
 import {AbstractItem} from "@/game/Items/AbstractItem";
 import {QuestOption} from "@/game/Quests/QuestOption";
 import {Player} from "@/game/Player/Player";
+import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
 
 export abstract class AbstractQuest {
     public static readonly movesRequired: number = 1
+
+    public sector: AbstractSector
+
+    constructor(sector: AbstractSector) {
+        this.sector = sector
+    }
 
     public abstract getTitle(): string
 

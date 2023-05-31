@@ -1,8 +1,9 @@
 // @ts-ignore
-import {locationsCount, shuffleArray} from "@/traits/GameTrait";
+import {shuffleArray} from "@/traits/GameTrait";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
 import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AbandonedDroidStation";
 import {EmptyLocation} from "@/game/Locations/EmptyLocation";
+import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
 
 export abstract class AbstractMap {
 
@@ -24,20 +25,22 @@ export abstract class AbstractMap {
 
     public abstract getSoundtrackPath(): string
 
-    public abstract getLocations(): AbstractLocation[]
+    public abstract getLocations(): (typeof AbstractLocation)[]
 
-    protected formNewLocationPool(): AbstractLocation[] {
+    private formNewLocationPool(): AbstractLocation[] {
         const locations = this.getLocations()
         let pool = [...locations]
         for (let i = 0; i < AbstractMap.locationsCount - locations.length; i++) {
-            pool.push(new EmptyLocation(0))
+            pool.push(EmptyLocation)
         }
         pool = shuffleArray(pool)
-        let i = 0
+        let formed = []
+        let id = 0
         for (const location of pool) {
-            location.id = i
-            i++
+            // @ts-ignore
+            formed.push(new location(id))
+            id++
         }
-        return pool
+        return formed
     }
 }

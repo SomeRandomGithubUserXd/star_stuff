@@ -128,8 +128,7 @@ const submit = () => {
   audio.pause()
   const dsPlayers = darkSidePlayers.value
   for (const player of dsPlayers) {
-    player.currentLocation = AbstractMap.lastLocationId
-    player.currentSector = 3
+    player.currentSector = 99
   }
   let id = 0
   for (const player of [...lightSidePlayers.value, ...dsPlayers]) {

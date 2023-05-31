@@ -15,8 +15,6 @@ export abstract class AbstractCharacter {
 
     protected _totalExp: number
 
-    public currentLocation: number
-
     public currentSector: number
 
     protected _mainWeapon: AbstractMainWeapon
@@ -65,13 +63,12 @@ export abstract class AbstractCharacter {
         this._mainWeapon = mainWeapon
     }
 
-    protected constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0, currentLocation = 0, currentSector = 0) {
+    protected constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0, currentSector = 0) {
         this.id = id;
         this.side = side;
         this.name = name;
         this._health = health;
         this._totalExp = totalExp;
-        this.currentLocation = currentLocation;
         this.currentSector = currentSector;
         this._mainWeapon = new BlasterE11()
     }

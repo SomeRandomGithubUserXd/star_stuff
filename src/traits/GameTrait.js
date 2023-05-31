@@ -18,3 +18,7 @@ export const findById = (array, key) => {
 export const getColoredPlayerSpan = (player) => {
    return `<span style="color: ${player.side.getColor()}">${player.name}</span>`
 }
+
+export const getFieldCoords = (sectorNumber, rows = 10) => {
+    return [sectorNumber % rows, Math.floor(sectorNumber / rows)]
+}

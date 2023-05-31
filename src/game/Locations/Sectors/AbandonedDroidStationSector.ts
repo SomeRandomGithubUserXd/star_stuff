@@ -1,21 +1,21 @@
-import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
 import {AbstractQuest} from "@/game/Quests/AbstractQuest";
 import {DeadTrooperQuest} from "@/game/Quests/DeadTrooperQuest";
 import {IntRange} from "@/misc/Types";
 
-export class DefaultSector extends AbstractSector {
+export class AbandonedDroidStationSector extends AbstractSector {
     public type(): number {
         return AbstractSector.DEFAULT_TYPE;
     }
 
-    questPool(): AbstractQuest[] {
+    public questPool(): AbstractQuest[] {
         return [
-            new DeadTrooperQuest()
+            new DeadTrooperQuest(this)
         ];
     }
 
-    questChance(): IntRange<0, 100> {
-        return 99;
+    protected questChance(): IntRange<0, 101> {
+        return 100;
     }
 
     protected formQuestPool(): AbstractQuest[] {

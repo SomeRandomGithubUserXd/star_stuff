@@ -6,7 +6,7 @@ import {Toast} from "@/traits/SwalTrait";
 // @ts-ignore
 import {playSound} from "@/traits/SoundTrait"
 // @ts-ignore
-import {findById, getColoredPlayerSpan} from "@/traits/GameTrait"
+import {findById, getColoredPlayerSpan, getFieldCoords} from "@/traits/GameTrait"
 import Location from "@/components/Game/Location.vue";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
 import {AbstractQuest} from "@/game/Quests/AbstractQuest";
@@ -15,6 +15,7 @@ import {Fight} from "@/game/Fight/Fight";
 import {QuestOptionConsequence} from "@/game/Quests/QuestOptionConsequence";
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
 
 export class Game {
     public mainAudio: HTMLAudioElement
@@ -45,7 +46,7 @@ export class Game {
     }
 
     public selectOption(option: QuestOption): Promise<QuestOptionConsequence> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             let consequence
             if (option.requiresLvl <= this.getCurrentPlayer().getLevel()) {
                 consequence = option.positiveConsequence
@@ -84,12 +85,8 @@ export class Game {
 
     public endActiveQuest(consequence: QuestOptionConsequence) {
         if (this.activeQuest) {
-            for (const location of this.map.locations) {
-                if (location.id === this.getCurrentPlayer().currentLocation) {
-                    const quests = location.sectors[this.getCurrentPlayer().currentSector].quests
-                    quests.splice(quests.indexOf(<AbstractQuest>this.getActiveQuest()), 1)
-                }
-            }
+            const quests = this.activeQuest.sector.quests
+            quests.splice(quests.indexOf(<AbstractQuest>this.activeQuest), 1)
             if (this.secondaryAudio) {
                 this.secondaryAudio.pause()
                 this.secondaryAudio = null
@@ -115,63 +112,32 @@ export class Game {
         return this.getCurrentPlayer()
     }
 
-    public movePlayer(key: number, locationId: number): void {
+    public movePlayer(sector: AbstractSector): void {
         const player = this.getCurrentPlayer()
-        if (!this.playerCanVisitLocation(player, locationId, key)) {
+        if (!this.playerCanVisitSector(player, sector.id)) {
             playSound(require("@/assets/audio/sfx/error.mp3"))
             return
         }
-        player.currentLocation = locationId
-        player.currentSector = key
+        player.currentSector = sector.id
         playSound(require("@/assets/audio/characters/shared/footstep.wav"))
         this.subtractPlayerMoves(player, 1)
         this.checkForMoves(player)
     }
 
-    protected playerCanVisitLocation(player: Player, wantedLocation: number, wantedSector: number | null = null): boolean {
-        if (player.currentLocation === wantedLocation) return true
-        if (wantedLocation === player.currentLocation + 1) {
-            if (player.currentSector === 1 || player.currentSector === 3) {
-                if (!wantedSector) return true
-                if (!wantedSector) return true
-                return wantedSector === 0 || wantedSector == 2;
-            } else {
-                return false
-            }
-        }
-        if (wantedLocation === player.currentLocation + 5) {
-            if (player.currentSector === 2 || player.currentSector === 3) {
-                if (!wantedSector) return true
-                return wantedSector === 0 || wantedSector == 1;
-            } else {
-                return false
-            }
-        }
-        if (wantedLocation === player.currentLocation - 1) {
-            if (player.currentSector === 0 || player.currentSector === 2) {
-                if (!wantedSector) return true
-                return wantedSector === 1 || wantedSector == 3;
-            } else {
-                return false
-            }
-        }
-        if (wantedLocation === player.currentLocation - 5) {
-            if (player.currentSector === 0 || player.currentSector === 1) {
-                if (!wantedSector) return true
-                return wantedSector === 2 || wantedSector == 3;
-            } else {
-                return false
+    protected playerCanVisitLocation(player: Player, wantedLocation: AbstractLocation): boolean {
+        for (const sector of wantedLocation.sectors) {
+            if(this.playerCanVisitSector(player, sector.id)) {
+                return true
             }
         }
         return false
     }
 
-    protected moveWastedAlert(moves: number, player: Player, action: string): void {
-        Toast.fire({
-            icon: 'info',
-            title: `${player.name} тратит ${moves} ход(а) на ${action}`,
-            timer: 1500
-        })
+    protected playerCanVisitSector(player: Player, wantedSector: number): boolean {
+        const current = getFieldCoords(player.currentSector)
+        const wanted = getFieldCoords(wantedSector)
+        let distance = Math.sqrt(((current[0] - wanted[0]) ** 2) + ((current[1] - wanted[1]) ** 2))
+        return Math.floor(distance) === 1 || Math.floor(distance) === 0
     }
 
     protected lackOfMovesAlert(moves: number, player: Player): void {
@@ -182,19 +148,18 @@ export class Game {
         })
     }
 
-    public discoverArea(key: number): void {
+    public discoverArea(location: AbstractLocation): void {
         const player = this.getCurrentPlayer()
         if (player.movesLeft < AbstractLocation.movesRequired) {
             this.lackOfMovesAlert(AbstractLocation.movesRequired, player)
             return
         }
-        if (!this.playerCanVisitLocation(player, key)) {
+        if (!this.playerCanVisitLocation(player, location)) {
             playSound(require("@/assets/audio/sfx/error.mp3"))
             return
         }
         const voices = player.side.character.voiceLines.positive
         playSound(voices[Math.floor(Math.random() * voices.length)])
-        let location = findById(this.map.locations, key)
         location.isDiscovered = true
         this.subtractPlayerMoves(player, 2)
         playSound(require("@/assets/audio/sfx/location_discovered.mp3"))
@@ -207,17 +172,17 @@ export class Game {
         this.checkForMoves(player)
     }
 
-    public applyQuest(locationId: number, sectorKey: number, quest: AbstractQuest) {
+    public applyQuest(sector: AbstractSector) {
         const player = this.getCurrentPlayer()
         if (player.movesLeft < AbstractQuest.movesRequired) {
             this.lackOfMovesAlert(AbstractQuest.movesRequired, player)
             return
         }
-        if (player.currentLocation !== locationId || player.currentSector !== sectorKey) {
+        if (player.currentSector !== sector.id) {
             playSound(require("@/assets/audio/sfx/error.mp3"))
             return
         }
-        this.setActiveQuest(quest)
+        this.setActiveQuest(sector.quests[0])
     }
 
     protected subtractPlayerMoves(player: Player, count: number): void {

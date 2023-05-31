@@ -18,7 +18,7 @@ export class Endor extends AbstractMap {
         return "Эндор";
     }
 
-    public getLocations(): AbstractLocation[] {
-        return [new AbandonedDroidStation(0)]
+    public getLocations(): (typeof AbstractLocation)[] {
+        return [AbandonedDroidStation]
     }
 }
