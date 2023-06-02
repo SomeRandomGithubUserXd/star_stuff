@@ -9,6 +9,8 @@ export class Player extends AbstractCharacter {
 
     protected _inventory: PlayerInventory = new PlayerInventory()
 
+    _totalExp = 500
+
     public getInventoryInstance(): PlayerInventory {
         return this._inventory
     }

@@ -17,7 +17,7 @@ const showInventory = ref(false)
 
 <template>
   <div class="needs-glowing select-none text-white flex items-end">
-    <player-inventory-modal :instance="props.instance.getInventoryInstance()" v-model="showInventory"/>
+    <player-inventory-modal :player="props.instance" v-model="showInventory"/>
     <img class="auto-img" style="max-width: 90px !important;" :src="props.instance.side.character.icon">
     <div class="flex px-4 h-full w-full gap-3" v-if="props.isCompact">
       <div class="flex flex-col">
@@ -53,7 +53,6 @@ const showInventory = ref(false)
             <div class="flex flex-col ml-auto cursor-help">
               <tippy class="z-10" :content="`Возможно нанести: ${props.instance.getDamagePossible()} урона`">
                 <div class="cursor-help">
-
                     <span class="font-bold">
                       <font-awesome-icon class="text-red-600" icon="fas fa-bolt"/>
                       {{ props.instance.getDamagePossible() }}
@@ -62,7 +61,6 @@ const showInventory = ref(false)
               </tippy>
               <tippy class="z-10" :content="`Шанс уворота: ${props.instance.getRange()}% / 99%`">
                 <div class="cursor-help">
-
                     <span class="font-bold">
                       <font-awesome-icon class="text-green-600" icon="fas fa-shield"/>
                       {{ props.instance.getDodgeChange() }}
@@ -78,7 +76,7 @@ const showInventory = ref(false)
                   {{ props.instance.getHealth() }}
                   <font-awesome-icon class="text-red-600" icon="fas fa-heart"/>
                 </h3>
-                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
+                <div class="w-full bg-gray-200 rounded-full h-2.5"
                      style="min-width: 70px">
                   <div class="bg-red-600 h-2.5 rounded-full transition-all"
                        :style="{width: `${props.instance.getHealth()}%`}"></div>
@@ -91,9 +89,9 @@ const showInventory = ref(false)
                   {{ props.instance.getLevel() }}
                   <font-awesome-icon class="text-indigo-500" icon="fas fa-jedi"/>
                 </h3>
-                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
+                <div class="w-full bg-gray-200 rounded-full h-2.5"
                      style="min-width: 70px">
-                  <div class="bg-blue-600 h-2.5 rounded-full dark:bg-indigo-500 transition-all"
+                  <div class="bg-blue-600 h-2.5 rounded-full transition-all"
                        :style="{width: `${props.instance.getLevelProgress()}%`}"></div>
                 </div>
               </div>
@@ -124,15 +122,15 @@ const showInventory = ref(false)
       <h1 class="font-bold w-1/2 overflow-hidden whitespace-nowrap overflow-ellipsis">{{ props.instance.name }}</h1>
       <div class="mt-1 flex items-center">
         <h3 class="mr-3 whitespace-nowrap">{{ props.instance.getHealth() }} HP</h3>
-        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
           <div class="bg-red-600 h-2.5 rounded-full"
                :style="{width: `${props.instance.getHealth()}%`}"></div>
         </div>
       </div>
       <div class="mt-1 flex items-center">
         <h3 class="mr-3 whitespace-nowrap">{{ Math.floor(props.instance.getTotalExp() / 1000) }} LVL</h3>
-        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-          <div class="bg-blue-600 h-2.5 rounded-full dark:bg-indigo-500"
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-blue-600 h-2.5 rounded-full"
                :style="{width: `${(props.instance.getTotalExp() / 10) - (Math.floor(props.instance.getTotalExp() / 1000) * 100)}%`}"></div>
         </div>
       </div>

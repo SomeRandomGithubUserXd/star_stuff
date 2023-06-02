@@ -13,7 +13,7 @@ const showModal = ref(false)
 
 <template>
   <div @click="showModal = true"
-       class="flex click-sound items-center w-full h-full cursor-pointer rounded border-2 border-solid p-2 shadow"
+       class="flex needs-glowing click-sound items-center w-full h-full cursor-pointer rounded border-2 border-solid p-2 shadow"
        :style="{borderColor: ItemRarityEnum.getColors(props.instance.getRarityLevel())[0]}">
     <item-modal :item="props.instance" v-model="showModal"/>
     <div class="w-full h-full"
