@@ -99,7 +99,7 @@ const emit = defineEmits(['update:modelValue'])
               <div class="grid grid-cols-6 gap-4 mt-5">
                 <div class="col-span-6 sm:col-span-3 flex justify-center flex-col">
                   <h1 class="text-center w-full font-bold text-xl mb-3">
-                    {{ props.player.name }}
+                    {{ props.player.getMainWeapon().name }}
                   </h1>
                   <weapon-card class="h-20 mb-3" :instance="props.player.getMainWeapon()"/>
                   <div class="flex items-center">
