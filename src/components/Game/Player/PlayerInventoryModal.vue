@@ -30,9 +30,9 @@ const emit = defineEmits(['update:modelValue'])
                          leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
           <div
               class="inline-block align-bottom rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="px-4 sm:p-6 bg-slate-700 text-white tracking-widest">
-              <div class="flex flex-col">
-                <div class="flex items-center">
+            <div class="px-4 sm:p-6 bg-slate-700 text-white tracking-widest grid grid-cols-6 gap-4">
+              <div class="flex flex-col col-span-6">
+                <div class="flex items-end">
                   <div class="flex flex-col mr-2">
                     <h1 class="text-center w-full font-bold text-xl mb-3">
                       {{ props.player.name }}
@@ -96,24 +96,38 @@ const emit = defineEmits(['update:modelValue'])
                   </div>
                 </div>
               </div>
-              <div class="grid grid-cols-6 gap-4 mt-5">
-                <div class="col-span-6 sm:col-span-3 flex justify-center flex-col">
-                  <h1 class="text-center w-full font-bold text-xl mb-3">
-                    {{ props.player.getMainWeapon().name }}
-                  </h1>
-                  <weapon-card class="h-20 mb-3" :instance="props.player.getMainWeapon()"/>
-                  <div class="flex items-center">
-                    <font-awesome-icon class="text-indigo-500 mr-2" icon="fas fa-eye"/>
-                    <span class="text-indigo-300">+{{ props.player.getMainWeapon().addsPossibleRange() }} локаций</span>
+              <div class="flex flex-col mt-5 col-span-6">
+                <div class="flex items-center">
+                  <div class="flex flex-col mr-2">
+                    <h1 class="text-center w-full font-bold text-xl mb-3">
+                      Напарник
+                    </h1>
                   </div>
-                  <div class="flex items-center">
-                    <font-awesome-icon class="text-red-600 mr-2" icon="fas fa-bolt"/>
-                    <span class="text-red-600">{{ props.player.getMainWeapon().addsPossibleDamage() }} ед.</span>
+                  <div class="ml-5 mt-auto w-full flex flex-col">
                   </div>
                 </div>
-                <div class="col-span-6 sm:col-span-3 flex justify-center">
-                  sus
+              </div>
+              <div class="col-span-6 sm:col-span-3 flex flex-col">
+                <h1 class="w-full font-bold text-xl mb-3">
+                  {{ props.player.getMainWeapon().getName() }}
+                </h1>
+                <weapon-card class="h-20 mb-3" :instance="props.player.getMainWeapon()"/>
+                <div class="flex items-center">
+                  <font-awesome-icon class="text-indigo-500 mr-2" icon="fas fa-eye"/>
+                  <span class="text-indigo-300">+{{ props.player.getMainWeapon().addsPossibleRange() }} локаций</span>
                 </div>
+                <div class="flex items-center">
+                  <font-awesome-icon class="text-red-600 mr-2" icon="fas fa-bolt"/>
+                  <span class="text-red-600">+{{ props.player.getMainWeapon().addsPossibleDamage() }} ед.</span>
+                </div>
+              </div>
+              <div class="col-span-6 sm:col-span-3 flex flex-col items-end">
+                <h1 class="font-bold text-xl mb-3">
+                  Метательное
+                </h1>
+              </div>
+              <div class="col-span-6 sm:col-span-3 flex flex-col">
+                Предметы
               </div>
             </div>
           </div>

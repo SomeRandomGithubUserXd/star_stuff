@@ -103,7 +103,7 @@ const showInventory = ref(false)
         <div class="flex items-center h-full py-2 w-full">
           <template v-if="props.instance.getMainWeapon()">
             <tippy class="w-full h-full" :content="props.instance.getMainWeapon().getName">
-              <weapon-card :instance="props.instance.getMainWeapon()"/>
+              <weapon-card class="h-full" :instance="props.instance.getMainWeapon()"/>
             </tippy>
           </template>
         </div>
