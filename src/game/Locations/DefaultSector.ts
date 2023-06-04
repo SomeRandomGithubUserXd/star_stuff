@@ -8,20 +8,13 @@ export class DefaultSector extends AbstractSector {
         return AbstractSector.DEFAULT_TYPE;
     }
 
-    public questPool(): AbstractQuest[] {
-        return [
-            new DeadTrooperQuest(this)
-        ];
-    }
-
-    protected questChance(): IntRange<0, 101> {
-        return 15;
-    }
-
     protected formQuestPool(): AbstractQuest[] {
+        const pool = [
+            new DeadTrooperQuest(this)
+        ]
         const random = Math.floor(Math.random() * 100)
-        if (random < this.questChance()) {
-            return [this.questPool()[Math.floor(Math.random() * this.questPool().length)]]
+        if (random < 15) {
+            return [pool[Math.floor(Math.random() * pool.length)]]
         } else {
             return [];
         }

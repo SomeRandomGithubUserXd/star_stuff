@@ -5,6 +5,7 @@ import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AdandonedDroidSta
 import {EmptyLocation} from "@/game/Locations/EmptyLocation";
 import {AbstractSector} from "@/game/Locations/AbstractSector";
 import {AbstractCharacter} from "@/game/AbstractCharacter";
+import {Game} from "@/game/Game";
 
 export abstract class AbstractMap {
 

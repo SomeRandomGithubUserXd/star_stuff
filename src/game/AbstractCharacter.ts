@@ -4,11 +4,6 @@ import {BlasterE11} from "@/game/Items/Weapons/BlasterE11";
 import {IntRange} from "@/misc/Types";
 
 export abstract class AbstractCharacter {
-
-    public id: number
-
-    public side: Side
-
     public name: string
 
     protected _health: number
@@ -61,13 +56,10 @@ export abstract class AbstractCharacter {
         this._mainWeapon = mainWeapon
     }
 
-    protected constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0) {
-        this.id = id;
-        this.side = side;
+    protected constructor(name: string, health: number = 100, totalExp = 0) {
         this.name = name;
         this._health = health;
         this._totalExp = totalExp;
-        // this.currentSector = currentSector;
         this._mainWeapon = new BlasterE11()
     }
 

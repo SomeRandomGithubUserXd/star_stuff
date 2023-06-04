@@ -46,10 +46,6 @@ export abstract class AbstractSector {
 
     public abstract type(): number
 
-    public abstract questPool(): AbstractQuest[]
-
-    protected abstract questChance(): IntRange<0, 101>
-
     protected abstract formQuestPool(): AbstractQuest[]
 
     public abstract stepSound(): string

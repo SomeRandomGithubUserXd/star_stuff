@@ -8,20 +8,14 @@ export class AbandonedDroidStationSector extends AbstractSector {
         return AbstractSector.DEFAULT_TYPE;
     }
 
-    public questPool(): AbstractQuest[] {
-        return [
+    protected formQuestPool(): AbstractQuest[] {
+        const pool = [
             new DeadTrooperQuest(this)
         ];
-    }
 
-    protected questChance(): IntRange<0, 101> {
-        return 100;
-    }
-
-    protected formQuestPool(): AbstractQuest[] {
         const random = Math.floor(Math.random() * 100)
-        if (random < this.questChance()) {
-            return [this.questPool()[Math.floor(Math.random() * this.questPool().length)]]
+        if (random < 100) {
+            return [pool[Math.floor(Math.random() * pool.length)]]
         } else {
             return [];
         }

@@ -180,10 +180,6 @@ export class Game {
             this.lackOfMovesAlert(AbstractQuest.movesRequired, player)
             return
         }
-        // if (player.currentSector !== sector.id) {
-        //     playSound(require("@/assets/audio/sfx/error.mp3"))
-        //     return
-        // }
         this.setActiveQuest(sector.quests[0])
     }
 

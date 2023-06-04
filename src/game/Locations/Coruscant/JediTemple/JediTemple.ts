@@ -1,6 +1,6 @@
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
 import {AbstractSector} from "@/game/Locations/AbstractSector";
-import {DefaultSector} from "@/game/Locations/DefaultSector";
+import {MaceWinduSector} from "@/game/Locations/Coruscant/JediTemple/MaceWinduSector";
 import {JediTempleSector} from "@/game/Locations/Coruscant/JediTemple/JediTempleSector";
 
 export class JediTemple extends AbstractLocation {
@@ -18,7 +18,7 @@ export class JediTemple extends AbstractLocation {
     }
 
     protected getSectorsAvailable(): (typeof AbstractSector)[] {
-        return [JediTempleSector, JediTempleSector, JediTempleSector, JediTempleSector];
+        return [MaceWinduSector, JediTempleSector, JediTempleSector, JediTempleSector];
     }
 
 }

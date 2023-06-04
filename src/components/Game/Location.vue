@@ -12,6 +12,8 @@ import "font-awesome/css/font-awesome.css"
 import {AbstractSector} from "@/game/Locations/AbstractSector";
 import EventIcon from "@/components/Game/Location/EventIcon.vue";
 import collect from "collect.js"
+import {NPC} from "@/game/NPC";
+import NpcIcon from "@/components/Game/NpcIcon.vue";
 
 const props = defineProps<{
   instance: AbstractLocation,
@@ -70,11 +72,14 @@ const getOptionsForSector = (sector: AbstractSector) => {
                 icon="fas fa-question-circle"/>
           </div>
           <div class="flex gap-1">
-            <template v-for="player of sector.getCharacters()">
-              <template v-if="player instanceof Player">
+            <template v-for="character of sector.getCharacters()">
+              <template v-if="character instanceof Player">
                 <player-icon
-                    :is-current="props.game.currentPlayerIndex === player.id"
-                    :instance="player"/>
+                    :is-current="props.game.currentPlayerIndex === character.id"
+                    :instance="character"/>
+              </template>
+              <template v-if="character instanceof NPC">
+                <npc-icon :instance="character"/>
               </template>
             </template>
           </div>
@@ -107,7 +112,7 @@ const getOptionsForSector = (sector: AbstractSector) => {
     .sector {
       width: 50%;
       height: 50%;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.2);
 
       &:hover {
         background: rgba(0, 0, 0, 0);

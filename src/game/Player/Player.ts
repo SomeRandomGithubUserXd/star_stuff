@@ -5,7 +5,11 @@ import {AbstractItem} from "@/game/Items/AbstractItem";
 
 export class Player extends AbstractCharacter {
 
-    public static readonly movesLimit = 3
+    public static readonly movesLimit = 4
+
+    public id: number
+
+    public side: Side
 
     protected _inventory: PlayerInventory = new PlayerInventory()
 
@@ -18,7 +22,9 @@ export class Player extends AbstractCharacter {
     public movesLeft: number
 
     constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0) {
-        super(id, side, name, health, totalExp);
+        super(name, health, totalExp);
+        this.id = id
+        this.side = side
         this.movesLeft = Player.movesLimit
     }
 
