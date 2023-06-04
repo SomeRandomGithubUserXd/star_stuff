@@ -70,7 +70,7 @@ const getOptionsForSector = (sector: AbstractSector) => {
                 icon="fas fa-question-circle"/>
           </div>
           <div class="flex gap-1">
-            <template  v-for="player of sector.getCharacters()">
+            <template v-for="player of sector.getCharacters()">
               <template v-if="player instanceof Player">
                 <player-icon
                     :is-current="props.game.currentPlayerIndex === player.id"
