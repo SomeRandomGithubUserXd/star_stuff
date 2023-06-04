@@ -1,6 +1,6 @@
 import {Side} from "@/game/Sides/Side";
 import {AbstractMap} from "@/game/Maps/AbstractMap";
-import {Geonosis} from "@/game/Maps/Geonosis";
+import {Coruscant} from "@/game/Maps/Coruscant";
 import {Naboo} from "@/game/Maps/Naboo";
 import {Mustafar} from "@/game/Maps/Mustafar";
 

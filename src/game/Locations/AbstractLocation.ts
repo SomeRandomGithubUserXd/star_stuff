@@ -1,21 +1,26 @@
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
-import {DefaultSector} from "@/game/Locations/Sectors/DefaultSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {DefaultSector} from "@/game/Locations/DefaultSector";
 // @ts-ignore
 import {shuffleArray, getFieldCoords} from "@/traits/GameTrait";
+import {AbstractMap} from "@/game/Maps/AbstractMap";
 
 export abstract class AbstractLocation {
 
     public static readonly expForExploring: number = 150
 
+
     public static readonly movesRequired: number = 2
+
+    public map: AbstractMap
 
     public id: number
 
-    public isDiscovered: boolean = false
+    public isDiscovered: boolean = true
 
     public sectors: AbstractSector[]
 
-    constructor(id: number) {
+    constructor(map: AbstractMap, id: number) {
+        this.map = map
         this.id = id
         this.sectors = this.formNewSectorsPool()
     }

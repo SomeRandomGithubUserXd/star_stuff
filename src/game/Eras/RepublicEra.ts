@@ -4,7 +4,7 @@ import {AbstractMap} from "@/game/Maps/AbstractMap";
 import {Tatooine} from "@/game/Maps/Tatooine";
 import {Naboo} from "@/game/Maps/Naboo";
 import {Mustafar} from "@/game/Maps/Mustafar";
-import {Geonosis} from "@/game/Maps/Geonosis";
+import {Coruscant} from "@/game/Maps/Coruscant";
 import {Character} from "@/game/Sides/Character/Character";
 import {CharacterVoiceLines} from "@/game/Sides/Character/CharacterVoiceLines";
 
@@ -92,6 +92,6 @@ export class RepublicEra extends AbstractEra {
     }
 
     public getMaps(): AbstractMap[] {
-        return [new Geonosis(), new Naboo(), new Mustafar()]
+        return [new Coruscant(), new Naboo(), new Mustafar()]
     }
 }

@@ -15,7 +15,7 @@ import {Fight} from "@/game/Fight/Fight";
 import {QuestOptionConsequence} from "@/game/Quests/QuestOptionConsequence";
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
 
 export class Game {
     public mainAudio: HTMLAudioElement
@@ -37,6 +37,7 @@ export class Game {
     private activeFight: Fight | null = null
 
     public setActiveQuest(quest: AbstractQuest): void {
+        playSound(require("@/assets/audio/sfx/quest_received.mp3"))
         quest.assignPlayer(this.getCurrentPlayer())
         this.activeQuest = quest
     }
@@ -92,6 +93,7 @@ export class Game {
                 this.secondaryAudio = null
                 this.mainAudio.play()
             }
+            playSound(require("@/assets/audio/sfx/quest_completed.mp3"))
             this.getCurrentPlayer().addHealth(consequence.addsHealth)
             this.getCurrentPlayer().addTotalExp(consequence.addsExp)
             this.activeQuest = null
@@ -114,28 +116,28 @@ export class Game {
 
     public movePlayer(sector: AbstractSector): void {
         const player = this.getCurrentPlayer()
-        if (!this.playerCanVisitSector(player, sector.id)) {
+        if (!this.playerCanVisitSector(player, sector)) {
             playSound(require("@/assets/audio/sfx/error.mp3"))
             return
         }
-        player.currentSector = sector.id
-        playSound(require("@/assets/audio/characters/shared/footstep.wav"))
+        sector.linkCharacter(player)
+        playSound(sector.stepSound())
         this.subtractPlayerMoves(player, 1)
         this.checkForMoves(player)
     }
 
     protected playerCanVisitLocation(player: Player, wantedLocation: AbstractLocation): boolean {
         for (const sector of wantedLocation.sectors) {
-            if(this.playerCanVisitSector(player, sector.id)) {
+            if(this.playerCanVisitSector(player, sector)) {
                 return true
             }
         }
         return false
     }
 
-    protected playerCanVisitSector(player: Player, wantedSector: number): boolean {
-        const current = getFieldCoords(player.currentSector)
-        const wanted = getFieldCoords(wantedSector)
+    protected playerCanVisitSector(player: Player, wantedSector: AbstractSector): boolean {
+        const current = getFieldCoords(this.map.getSectorByLinkedCharacter(player)?.id)
+        const wanted = getFieldCoords(wantedSector.id)
         let distance = Math.sqrt(((current[0] - wanted[0]) ** 2) + ((current[1] - wanted[1]) ** 2))
         return Math.floor(distance) === 1 || Math.floor(distance) === 0
     }
@@ -178,10 +180,10 @@ export class Game {
             this.lackOfMovesAlert(AbstractQuest.movesRequired, player)
             return
         }
-        if (player.currentSector !== sector.id) {
-            playSound(require("@/assets/audio/sfx/error.mp3"))
-            return
-        }
+        // if (player.currentSector !== sector.id) {
+        //     playSound(require("@/assets/audio/sfx/error.mp3"))
+        //     return
+        // }
         this.setActiveQuest(sector.quests[0])
     }
 
@@ -212,6 +214,12 @@ export class Game {
         this.lightSidePlayers = lightSidePlayers
         this.darkSidePlayers = darkSidePlayers
         this.currentPlayerIndex = currentPlayerIndex
+        for (const player of this.lightSidePlayers) {
+            this.map.locations[0].sectors[0].linkCharacter(player)
+        }
+        for (const player of this.darkSidePlayers) {
+            this.map.locations[this.map.locations.length - 1].sectors[3].linkCharacter(player)
+        }
         const audio = new Audio(this.map.getSoundtrackPath())
         audio.loop = true
         this.mainAudio = audio

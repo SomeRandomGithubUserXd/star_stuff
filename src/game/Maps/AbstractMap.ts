@@ -1,9 +1,10 @@
 // @ts-ignore
 import {shuffleArray} from "@/traits/GameTrait";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
-import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AbandonedDroidStation";
+import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AdandonedDroidStation/AbandonedDroidStation";
 import {EmptyLocation} from "@/game/Locations/EmptyLocation";
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {AbstractCharacter} from "@/game/AbstractCharacter";
 
 export abstract class AbstractMap {
 
@@ -38,9 +39,24 @@ export abstract class AbstractMap {
         let id = 0
         for (const location of pool) {
             // @ts-ignore
-            formed.push(new location(id))
+            formed.push(new location(this, id))
             id++
         }
         return formed
+    }
+
+    public getSectors(): AbstractSector[] {
+        const sectors = []
+        for (const location of this.locations) {
+            sectors.push(...location.sectors)
+        }
+        return sectors
+    }
+
+    public getSectorByLinkedCharacter(character: AbstractCharacter): AbstractSector | null {
+        for (const sector of this.getSectors()) {
+            if(sector.includesCharacter(character)) return sector
+        }
+        return null
     }
 }

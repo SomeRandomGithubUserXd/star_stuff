@@ -17,8 +17,8 @@ export class Player extends AbstractCharacter {
 
     public movesLeft: number
 
-    constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0, currentSector = 0) {
-        super(id, side, name, health, totalExp, currentSector);
+    constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0) {
+        super(id, side, name, health, totalExp);
         this.movesLeft = Player.movesLimit
     }
 

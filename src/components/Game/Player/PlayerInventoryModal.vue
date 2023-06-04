@@ -34,25 +34,20 @@ const emit = defineEmits(['update:modelValue'])
               <div class="flex flex-col col-span-6">
                 <div class="flex items-end">
                   <div class="flex flex-col mr-2">
-                    <h1 class="text-center w-full font-bold text-xl mb-3">
-                      {{ props.player.name }}
-                    </h1>
                     <div class="transition-all z-10">
                       <div style="width: 75px;height: 75px"
                            class="rounded-full p-1 animated needs-glowing rounded-glowing">
                         <img class="auto-img rounded-full" :src="props.player.side.character.icon"/>
                       </div>
+                      <h1 class="text-center w-full font-bold text-xl mt-3">
+                        {{ props.player.name }}
+                      </h1>
                     </div>
                   </div>
                   <div class="ml-5 mt-auto w-full flex flex-col">
                     <div class="mb-1 flex flex-wrap w-full">
                       <div class="flex flex-col justify-start w-full mb-3">
                         <div class="flex flex-col ml-auto w-full gap-1">
-                          <div class="flex items-center w-full">
-                            <font-awesome-icon class="text-white mr-2" icon="fas fa-arrows-up-down-left-right"/>
-                            <span class="text-sm font-medium mr-1 text-center">Осталось ходов</span>
-                            <span class="ml-auto">{{ props.player.movesLeft }}</span>
-                          </div>
                           <div class="flex items-center">
                             <font-awesome-icon class="text-indigo-500 mr-2" icon="fas fa-eye"/>
                             <span class="text-sm font-medium mr-1">Дальнобойность</span>

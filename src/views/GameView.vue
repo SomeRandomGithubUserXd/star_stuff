@@ -74,7 +74,7 @@ import NewPlayerModal from "@/components/Menu/NewPlayerModal.vue";
 import CustomButton from "@/components/Main/CustomButton.vue";
 import {Tatooine} from "@/game/Maps/Tatooine";
 import MapRadio from "@/components/Menu/MapRadio.vue";
-import {Geonosis} from "@/game/Maps/Geonosis";
+import {Coruscant} from "@/game/Maps/Coruscant";
 import GameComponent from "@/components/Game/GameComponent.vue";
 import {AbstractMap} from "@/game/Maps/AbstractMap"
 
@@ -82,7 +82,7 @@ const erasAvailable = [new RepublicEra(), new ImperialEra()]
 
 const era = ref(new RepublicEra())
 
-const map = ref(new Geonosis())
+const map = ref(new Coruscant())
 
 watch(era, value => {
   const changeEraForPlayers = (players: Player[], side: Side) => {
@@ -126,15 +126,11 @@ audio.loop = true
 
 const submit = () => {
   audio.pause()
-  const dsPlayers = darkSidePlayers.value
-  for (const player of dsPlayers) {
-    player.currentSector = 99
-  }
   let id = 0
-  for (const player of [...lightSidePlayers.value, ...dsPlayers]) {
+  for (const player of [...lightSidePlayers.value, ...darkSidePlayers.value]) {
     player.id = id++
   }
-  game.value = new Game(era.value, map.value, lightSidePlayers.value, dsPlayers)
+  game.value = new Game(era.value, map.value, lightSidePlayers.value, darkSidePlayers.value)
 }
 
 </script>

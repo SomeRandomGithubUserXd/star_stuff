@@ -1,6 +1,6 @@
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
-import {DefaultSector} from "@/game/Locations/Sectors/DefaultSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {DefaultSector} from "@/game/Locations/DefaultSector";
 
 export class EmptyLocation extends AbstractLocation {
     getName(): string {

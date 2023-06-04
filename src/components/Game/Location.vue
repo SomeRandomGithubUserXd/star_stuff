@@ -9,7 +9,7 @@ import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
 import VueSimpleContextMenu from 'vue-simple-context-menu/src/vue-simple-context-menu.vue'
 import "font-awesome/css/font-awesome.css"
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
 import EventIcon from "@/components/Game/Location/EventIcon.vue";
 import collect from "collect.js"
 
@@ -21,27 +21,6 @@ const props = defineProps<{
 
 const location = ref(props.instance)
 
-const activePlayers = ref([])
-
-watch(() => props.players, value => {
-  refreshActivePlayers()
-}, {deep: true})
-
-const refreshActivePlayers = () => {
-  const players = []
-  for (const player of props.players) {
-    for (const sector of props.instance.sectors) {
-      if (player.currentSector === sector?.id) players.push(player)
-    }
-  }
-  if (players.length) location.value.isDiscovered = true
-  activePlayers.value = players
-}
-
-onMounted(() => {
-  refreshActivePlayers()
-})
-
 const emit = defineEmits(['moveToSector', 'discover', 'applyQuest'])
 
 const ctxMenus = ref(null)
@@ -52,7 +31,6 @@ function handleClick(event: any, item: any) {
   }
   collect(ctxMenus.value).where('elementId', '==', 'sector-menu-' + item.id).first().showMenu(event, item)
 }
-
 
 function optionClicked(event: any) {
   event.option.callback()
@@ -92,12 +70,11 @@ const getOptionsForSector = (sector: AbstractSector) => {
                 icon="fas fa-question-circle"/>
           </div>
           <div class="flex gap-1">
-            <template v-if="activePlayers.length">
-              <template v-for="player of activePlayers">
+            <template  v-for="player of sector.getCharacters()">
+              <template v-if="player instanceof Player">
                 <player-icon
                     :is-current="props.game.currentPlayerIndex === player.id"
-                    :instance="player"
-                    v-if="player.currentSector === sector.id"/>
+                    :instance="player"/>
               </template>
             </template>
           </div>

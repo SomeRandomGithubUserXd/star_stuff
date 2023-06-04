@@ -1,4 +1,4 @@
-import {AbstractSector} from "@/game/Locations/Sectors/AbstractSector";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
 
 export abstract class AbstractThrowable {
 

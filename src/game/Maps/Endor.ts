@@ -1,6 +1,6 @@
 import {AbstractMap} from "@/game/Maps/AbstractMap";
 import {AbstractLocation} from "@/game/Locations/AbstractLocation";
-import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AbandonedDroidStation";
+import {AbandonedDroidStation} from "@/game/Locations/Geonosis/AdandonedDroidStation/AbandonedDroidStation";
 
 export class Endor extends AbstractMap {
     getPreviewImage(): string {
@@ -12,7 +12,7 @@ export class Endor extends AbstractMap {
 
     }
     getSoundtrackPath(): string {
-        return require("@/assets/audio/maps/geonosis.mp3");
+        return require("@/assets/audio/maps/coruscant.mp3");
     }
     getName(): string {
         return "Эндор";
