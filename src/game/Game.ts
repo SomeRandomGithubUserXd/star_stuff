@@ -16,6 +16,8 @@ import {QuestOptionConsequence} from "@/game/Quests/QuestOptionConsequence";
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {AbstractCharacter} from "@/game/AbstractCharacter";
+import {AbstractNPC} from "@/game/NPC/AbstractNPC";
 
 export class Game {
     public mainAudio: HTMLAudioElement
@@ -30,11 +32,27 @@ export class Game {
 
     public lightSidePlayers: Player[]
 
-    public currentPlayerIndex: number
+    private __currentPlayer: Player
 
     private activeQuest: AbstractQuest | null = null
 
     private activeFight: Fight | null = null
+
+    public canStartAFight(attacking: AbstractCharacter, defending: AbstractCharacter): boolean {
+        if (attacking instanceof Player && defending instanceof Player) {
+            return attacking.id !== defending.id && this.playerCanVisitSector(attacking, <AbstractSector>defending.getSector(), attacking.getRange())
+        }
+        if (attacking instanceof Player && defending instanceof AbstractNPC) {
+            return this.playerCanVisitSector(attacking, <AbstractSector>defending.getSector(), attacking.getRange())
+        }
+        // TODO: AI Attack
+        return true
+    }
+
+    public startAFight(defending: AbstractCharacter): void {
+        if (!this.canStartAFight(this.getCurrentPlayer(), defending)) return
+        this.activeFight = new Fight(this, this.getCurrentPlayer(), defending)
+    }
 
     public setActiveQuest(quest: AbstractQuest): void {
         playSound(require("@/assets/audio/sfx/quest_received.mp3"))
@@ -44,6 +62,27 @@ export class Game {
 
     public getActiveQuest(): AbstractQuest | null {
         return this.activeQuest
+    }
+
+    public getActiveFight(): Fight | null {
+        return this.activeFight
+    }
+
+    public endActiveFight(): void {
+        const attacker = this.activeFight?.attackingCharacter
+        const defender = this.activeFight?.defendingCharacter
+        if (attacker && defender) {
+            if (attacker.getHealth() <= 0) this.callCharacterDead(attacker)
+            if (defender.getHealth() <= 0) this.callCharacterDead(defender)
+            attacker.movesLeft = defender.movesLeft = Player.movesLimit
+        }
+        this.activeFight = null
+        this.updateCurrentPlayer()
+    }
+
+    private callCharacterDead(character: AbstractCharacter) {
+        character.isDead = true
+        character.getSector()?.unlinkCharacter(character)
     }
 
     public selectOption(option: QuestOption): Promise<QuestOptionConsequence> {
@@ -106,12 +145,7 @@ export class Game {
     }
 
     public getCurrentPlayer(): Player {
-        for (const player of this.getAllPlayers()) {
-            if (player.id === this.currentPlayerIndex) {
-                return player
-            }
-        }
-        return this.getCurrentPlayer()
+        return this.__currentPlayer
     }
 
     public movePlayer(sector: AbstractSector): void {
@@ -128,18 +162,21 @@ export class Game {
 
     protected playerCanVisitLocation(player: Player, wantedLocation: AbstractLocation): boolean {
         for (const sector of wantedLocation.sectors) {
-            if(this.playerCanVisitSector(player, sector)) {
+            if (this.playerCanVisitSector(player, sector)) {
                 return true
             }
         }
         return false
     }
 
-    protected playerCanVisitSector(player: Player, wantedSector: AbstractSector): boolean {
+    protected playerCanVisitSector(player: Player, wantedSector: AbstractSector, wantedDistance: number | null = null): boolean {
         const current = getFieldCoords(this.map.getSectorByLinkedCharacter(player)?.id)
         const wanted = getFieldCoords(wantedSector.id)
         let distance = Math.sqrt(((current[0] - wanted[0]) ** 2) + ((current[1] - wanted[1]) ** 2))
-        return Math.floor(distance) === 1 || Math.floor(distance) === 0
+        if (wantedDistance !== null) {
+            return Math.floor(distance) <= wantedDistance
+        }
+        return Math.floor(distance) <= 1
     }
 
     protected lackOfMovesAlert(moves: number, player: Player): void {
@@ -160,12 +197,12 @@ export class Game {
             playSound(require("@/assets/audio/sfx/error.mp3"))
             return
         }
-        const voices = player.side.character.voiceLines.positive
+        const voices = player.getCharacter().voiceLines.positive
         playSound(voices[Math.floor(Math.random() * voices.length)])
         location.isDiscovered = true
         this.subtractPlayerMoves(player, 2)
         playSound(require("@/assets/audio/sfx/location_discovered.mp3"))
-        player.setTotalExp(player.getTotalExp() + AbstractLocation.expForExploring)
+        player.addTotalExp(location.getExpForExploring())
         Toast.fire({
             icon: 'success',
             title: `${getColoredPlayerSpan(player)} открывает <span class="text-indigo-300">${location.getName()}</span> и получает <span class="text-indigo-600">${location.getExpForExploring()} опыта</span>`,
@@ -188,33 +225,45 @@ export class Game {
         this.checkForMoves(player)
     }
 
-    protected checkForMoves(player: Player): void {
+    protected checkForMoves(player: Player) {
         if (player.movesLeft <= 0) {
-            this.getCurrentPlayer().movesLeft = Player.movesLimit
-            if (this.currentPlayerIndex + 1 === this.getAllPlayers().length) {
-                this.currentPlayerIndex = 0
-            } else {
-                this.currentPlayerIndex += 1
-            }
-            Toast.fire({
-                icon: 'warning',
-                title: `Ход переходит к ${getColoredPlayerSpan(this.getCurrentPlayer())}`,
-                timer: 1500
-            })
+            this.updateCurrentPlayer()
         }
     }
 
-    constructor(era: AbstractEra, map: AbstractMap, lightSidePlayers: Player[], darkSidePlayers: Player[], currentPlayerIndex = 0) {
+    protected updateCurrentPlayer(): void {
+        const ids = []
+        for (const player of this.getAllPlayers()) {
+            if (!player.isDead) {
+                ids.push(player.id)
+            }
+        }
+        ids.sort()
+        this.getCurrentPlayer().movesLeft = Player.movesLimit
+        if (!ids[ids.indexOf(this.__currentPlayer.id) + 1]) {
+            this.__currentPlayer = findById(this.getAllPlayers(), ids[0])
+        } else {
+            this.__currentPlayer = findById(this.getAllPlayers(), ids[ids.indexOf(this.__currentPlayer.id) + 1])
+        }
+        Toast.fire({
+            icon: 'warning',
+            title: `Ход переходит к ${getColoredPlayerSpan(this.getCurrentPlayer())}`,
+            timer: 1500
+        })
+    }
+
+    constructor(era: AbstractEra, map: AbstractMap, lightSidePlayers: Player[], darkSidePlayers: Player[], __currentPlayer: Player) {
         this.era = era
         this.map = map
         this.lightSidePlayers = lightSidePlayers
         this.darkSidePlayers = darkSidePlayers
-        this.currentPlayerIndex = currentPlayerIndex
+        this.__currentPlayer = __currentPlayer
         for (const player of this.lightSidePlayers) {
             this.map.locations[0].sectors[0].linkCharacter(player)
         }
         for (const player of this.darkSidePlayers) {
-            this.map.locations[this.map.locations.length - 1].sectors[3].linkCharacter(player)
+            // this.map.locations[this.map.locations.length - 1].sectors[3].linkCharacter(player)
+            this.map.locations[0].sectors[0].linkCharacter(player)
         }
         const audio = new Audio(this.map.getSoundtrackPath())
         audio.loop = true

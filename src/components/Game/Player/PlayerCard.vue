@@ -4,21 +4,44 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import WeaponCard from "@/components/Game/Items/WeaponCard.vue";
 import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
-import PlayerInventoryModal from "@/components/Game/Player/PlayerInventoryModal.vue";
+import PlayerInventoryModal from "@/components/Game/CharacterModal.vue";
 import {ref} from "vue";
+import CharacterModal from "@/components/Game/CharacterModal.vue";
 
 const props = defineProps<{
+  currentPlayerCanAttack: boolean,
   instance: Player,
   isCompact: false,
 }>()
 
 const showInventory = ref(false)
+
+const getPlayer = (): Player => {
+  return props.instance
+}
+
+const openPlayerInventory = (): void => {
+  const audio = new Audio(require('@/assets/audio/sfx/click.mp3'));
+  audio.play();
+  showInventory.value = true
+}
+
+defineExpose({
+  getPlayer,
+  openPlayerInventory
+});
+
+const emit = defineEmits(['attackCharacter'])
 </script>
 
 <template>
-  <div class="needs-glowing select-none text-white flex items-end">
-    <player-inventory-modal :player="props.instance" v-model="showInventory"/>
-    <img class="auto-img" style="max-width: 90px !important;" :src="props.instance.side.character.icon">
+  <div class="needs-glowing select-none text-white flex items-end" :class="{'opacity-25': props.instance.isDead}">
+    <character-modal
+        @attack-character="emit('attackCharacter', $event)"
+        :current-player-can-attack="props.currentPlayerCanAttack"
+        :instance="props.instance"
+        v-model="showInventory"/>
+    <img class="auto-img" style="max-width: 90px !important;" :src="props.instance.getCharacter().icon">
     <div class="flex px-4 h-full w-full gap-3" v-if="props.isCompact">
       <div class="flex flex-col">
         <div class="flex">
@@ -39,7 +62,7 @@ const showInventory = ref(false)
                     </span>
                 </div>
               </tippy>
-              <tippy class="z-10" :content="`Дальнобойность: ${props.instance.getRange()} локаций`">
+              <tippy class="z-10" :content="`Дальнобойность: ${props.instance.getRange()} секторов`">
                 <div>
                     <span class="font-bold">
                       <font-awesome-icon class="text-indigo-500" icon="fas fa-eye"/>
@@ -59,7 +82,7 @@ const showInventory = ref(false)
                     </span>
                 </div>
               </tippy>
-              <tippy class="z-10" :content="`Шанс уворота: ${props.instance.getRange()}% / 99%`">
+              <tippy class="z-10" :content="`Шанс уворота: ${props.instance.getDodgeChange()}% / 99%`">
                 <div class="cursor-help">
                     <span class="font-bold">
                       <font-awesome-icon class="text-green-600" icon="fas fa-shield"/>

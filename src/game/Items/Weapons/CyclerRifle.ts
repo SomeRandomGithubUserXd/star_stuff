@@ -2,6 +2,11 @@ import {AbstractMainWeapon} from "@/game/Items/Weapons/AbstractMainWeapon";
 import {ItemRarityEnum} from "@/game/Enums/ItemRarityEnum";
 
 export class CyclerRifle extends AbstractMainWeapon {
+
+    public fireSound(): string {
+        return require("@/assets/audio/weapons/CyclerRifle/CyclerRifle_shot.wav");
+    }
+
     public getRarityLevel(): ItemRarityEnum {
         return ItemRarityEnum.legendary
     }
@@ -21,7 +26,7 @@ export class CyclerRifle extends AbstractMainWeapon {
     getDescription(): string {
         return "Очень дальнобойная и мощная <span class='text-green-800'>Циклевочная винтовка</span>. " +
             "Позволяет нанести противнику урон в <span class='text-red-600'>23 ед.</span>" +
-            " на расстоянии <span class='text-indigo-500'>5-и локаций</span>" +
+            " на расстоянии <span class='text-indigo-500'>5-и секторов</span>" +
             "<br/>" +
             "<br/>" +
             "Когда экипирована,  <span class='text-red-600'>забирает 1 очко действия при каждом ходе</span>";

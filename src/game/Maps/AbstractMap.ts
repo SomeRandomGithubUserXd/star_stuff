@@ -48,6 +48,7 @@ export abstract class AbstractMap {
 
     public getSectors(): AbstractSector[] {
         const sectors = []
+        if(!this.locations) return []
         for (const location of this.locations) {
             sectors.push(...location.sectors)
         }

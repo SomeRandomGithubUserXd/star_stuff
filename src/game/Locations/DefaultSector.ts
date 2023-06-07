@@ -23,4 +23,6 @@ export class DefaultSector extends AbstractSector {
     public stepSound(): string {
         return require("@/assets/audio/characters/shared/footstep_rock.wav");
     }
+
+    dodgeChanceIncrement: number = Math.floor(Math.random() * 10)
 }

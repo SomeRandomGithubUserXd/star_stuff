@@ -2,6 +2,11 @@ import {ItemRarityEnum} from "@/game/Enums/ItemRarityEnum";
 import {AbstractMainWeapon} from "@/game/Items/Weapons/AbstractMainWeapon";
 
 export class K16Pistol extends AbstractMainWeapon {
+
+    public fireSound(): string {
+        return require("@/assets/audio/weapons/K16Pistol/K16Pistol_shot.wav");
+    }
+
     public getRarityLevel(): ItemRarityEnum {
         return ItemRarityEnum.common
     }
@@ -25,7 +30,7 @@ export class K16Pistol extends AbstractMainWeapon {
     getDescription(): string {
         return "Мощный <span class='text-green-800'>пистолет K-16 Bryar</span> с низкой дальнобойностью. " +
             "Позволяет нанести противнику урон в <span class='text-red-600'>4 ед.</span>" +
-            " в пределах <span class='text-indigo-800'>этой же локации и этого же сектора</span>"
+            " в пределах <span class='text-indigo-800'>этого же сектора</span>"
     }
 
 }

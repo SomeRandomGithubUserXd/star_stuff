@@ -16,7 +16,11 @@ export const findById = (array, key) => {
 }
 
 export const getColoredPlayerSpan = (player) => {
-   return `<span style="color: ${player.side.getColor()}">${player.name}</span>`
+    let color = '#16a34a'
+    if (player.isEvil) {
+        color = "#dc2626"
+    }
+    return `<span style="color: ${color}">${player.name}</span>`
 }
 
 export const getFieldCoords = (sectorNumber, rows = 10) => {

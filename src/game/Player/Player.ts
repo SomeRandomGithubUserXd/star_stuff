@@ -1,7 +1,8 @@
 import {AbstractCharacter} from "@/game/AbstractCharacter";
 import {Side} from "@/game/Sides/Side";
-import {PlayerInventory} from "@/game/Player/PlayerInventory";
-import {AbstractItem} from "@/game/Items/AbstractItem";
+import {AbstractMainWeapon} from "../Items/Weapons/AbstractMainWeapon";
+import {Character} from "@/game/Sides/Character/Character";
+import {MaceWinduLightsaber} from "@/game/Items/Weapons/Lightsabers/MaceWinduLightsaber";
 
 export class Player extends AbstractCharacter {
 
@@ -9,23 +10,32 @@ export class Player extends AbstractCharacter {
 
     public id: number
 
-    public side: Side
+    public name: string;
 
-    protected _inventory: PlayerInventory = new PlayerInventory()
+    public isEvil: boolean;
 
-    _totalExp = 500
+    protected characterInstance: Character;
 
-    public getInventoryInstance(): PlayerInventory {
-        return this._inventory
+    protected _health: number;
+
+    protected _totalExp: number;
+
+    protected _mainWeapon: AbstractMainWeapon;
+
+    public movesLeft: number = 4
+
+    public switchSide(side: Side) {
+        this.characterInstance = side.character
     }
-
-    public movesLeft: number
 
     constructor(id: number, side: Side, name: string, health: number = 100, totalExp = 0) {
-        super(name, health, totalExp);
+        super();
         this.id = id
-        this.side = side
-        this.movesLeft = Player.movesLimit
+        this.name = name;
+        this.characterInstance = side.character
+        this.isEvil = side.isEvil
+        this._health = health;
+        this._totalExp = totalExp;
+        this._mainWeapon = new MaceWinduLightsaber()
     }
-
 }

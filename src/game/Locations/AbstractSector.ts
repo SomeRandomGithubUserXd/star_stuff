@@ -15,7 +15,7 @@ export abstract class AbstractSector {
 
     public quests: AbstractQuest[]
 
-    protected _characters: AbstractCharacter[] = []
+    private __characters: AbstractCharacter[] = []
 
     constructor(location: AbstractLocation, id: number) {
         this.location = location
@@ -24,11 +24,11 @@ export abstract class AbstractSector {
     }
 
     public includesCharacter(character: AbstractCharacter): boolean {
-        return this._characters.includes(character)
+        return this.__characters.includes(character)
     }
 
     public getCharacters(): AbstractCharacter[] {
-        return this._characters
+        return this.__characters
     }
 
     public linkCharacter(character: AbstractCharacter): void {
@@ -36,12 +36,13 @@ export abstract class AbstractSector {
         if (previousSector) {
             previousSector.unlinkCharacter(character)
         }
-        this._characters.push(character)
+        character.setSector(this)
+        this.__characters.push(character)
     }
 
     public unlinkCharacter(character: AbstractCharacter): void {
-        const index = this._characters.indexOf(character)
-        this._characters.splice(index, 1)
+        const index = this.__characters.indexOf(character)
+        this.__characters.splice(index, 1)
     }
 
     public abstract type(): number
@@ -49,4 +50,6 @@ export abstract class AbstractSector {
     protected abstract formQuestPool(): AbstractQuest[]
 
     public abstract stepSound(): string
+
+    public abstract dodgeChanceIncrement: number
 }

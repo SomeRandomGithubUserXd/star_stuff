@@ -10,4 +10,5 @@ export abstract class AbstractMainWeapon extends AbstractItem {
         return "";
     }
 
+    public abstract fireSound(): string
 }

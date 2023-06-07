@@ -16,4 +16,6 @@ export class JediTempleSector extends AbstractSector {
     public stepSound(): string {
         return require("@/assets/audio/characters/shared/footstep_metal_solid.wav");
     }
+
+    dodgeChanceIncrement: number = 70
 }

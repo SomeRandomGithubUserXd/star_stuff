@@ -5,9 +5,10 @@ import {Player} from "@/game/Player/Player";
 import WeaponCard from "@/components/Game/Items/WeaponCard.vue";
 import {Tippy} from "vue-tippy";
 import 'tippy.js/dist/tippy.css'
+import {AbstractNPC} from "@/game/NPC/AbstractNPC";
 
 const props = defineProps<{
-  player: Player,
+  instance: AbstractNPC,
   modelValue: boolean
 }>()
 
@@ -34,13 +35,12 @@ const emit = defineEmits(['update:modelValue'])
               <div class="flex flex-col col-span-6">
                 <div class="flex items-end">
                   <div class="flex flex-col mr-2">
-                    <div class="transition-all z-10">
+                    <div class="transition-all z-10 flex flex-col items-center">
                       <div style="width: 75px;height: 75px"
-                           class="rounded-full p-1 animated needs-glowing rounded-glowing">
-                        <img class="auto-img rounded-full" :src="props.player.side.character.icon"/>
-                      </div>
+                           class="rounded-full flex justify-center p-1 bg-black bg-cover bg-center"
+                           :style="{backgroundImage: `url(${props.instance.getCharacter().icon})`}"/>
                       <h1 class="text-center w-full font-bold text-xl mt-3">
-                        {{ props.player.name }}
+                        {{ props.instance.name }}
                       </h1>
                     </div>
                   </div>
@@ -51,78 +51,59 @@ const emit = defineEmits(['update:modelValue'])
                           <div class="flex items-center">
                             <font-awesome-icon class="text-indigo-500 mr-2" icon="fas fa-eye"/>
                             <span class="text-sm font-medium mr-1">Дальнобойность</span>
-                            <span class="ml-auto text-indigo-300">{{ props.player.getRange() }} локаций</span>
+                            <span class="ml-auto text-indigo-300">{{ props.instance.getRange() }} секторов</span>
                           </div>
                           <div class="flex items-center">
                             <font-awesome-icon class="text-red-600 mr-2" icon="fas fa-bolt"/>
                             <span class="text-sm font-medium mr-1">Атака</span>
-                            <span class="ml-auto text-red-600">{{ props.player.getDamagePossible() }} ед.</span>
+                            <span class="ml-auto text-red-600">{{ props.instance.getDamagePossible() }} ед.</span>
                           </div>
                           <div class="flex items-center">
                             <font-awesome-icon class="text-green-600 mr-2" icon="fas fa-shield"/>
                             <span class="text-sm font-medium mr-1">Уворот</span>
-                            <span class="ml-auto text-green-600">{{ props.player.getDodgeChange() }} %</span>
+                            <span class="ml-auto text-green-600">{{ props.instance.getDodgeChange() }} %</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="flex items-center overflow-hidden">
                       <h3 class="mr-2 whitespace-nowrap font-bold">
-                        {{ props.player.getHealth() }}
+                        {{ props.instance.getHealth() }}
                         <font-awesome-icon class="text-red-600" icon="fas fa-heart"/>
                       </h3>
                       <div class="w-full bg-gray-200 rounded-full h-2.5 w-full"
                            style="min-width: 70px">
                         <div class="bg-red-600 h-2.5 rounded-full transition-all"
-                             :style="{width: `${props.player.getHealth()}%`}"></div>
+                             :style="{width: `${props.instance.getHealth()}%`}"></div>
                       </div>
                     </div>
                     <div class="flex items-center overflow-hidden">
                       <h3 class="mr-2 whitespace-nowrap font-bold">
-                        {{ props.player.getLevel() }}
+                        {{ props.instance.getLevel() }}
                         <font-awesome-icon class="text-indigo-500" icon="fas fa-jedi"/>
                       </h3>
                       <div class="w-full bg-gray-200 rounded-full h-2.5"
                            style="min-width: 70px">
                         <div class="bg-blue-600 h-2.5 rounded-full transition-all"
-                             :style="{width: `${props.player.getLevelProgress()}%`}"></div>
+                             :style="{width: `${props.instance.getLevelProgress()}%`}"></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="flex flex-col mt-5 col-span-6">
-                <div class="flex items-center">
-                  <div class="flex flex-col mr-2">
-                    <h1 class="text-center w-full font-bold text-xl mb-3">
-                      Напарник
-                    </h1>
-                  </div>
-                  <div class="ml-5 mt-auto w-full flex flex-col">
-                  </div>
-                </div>
-              </div>
-              <div class="col-span-6 sm:col-span-3 flex flex-col">
-                <h1 class="w-full font-bold text-xl mb-3">
-                  {{ props.player.getMainWeapon().getName() }}
+              <div class="col-span-6 sm:col-span-6 flex flex-col mt-3">
+                <h1 class="w-full text-base mb-1 text-center">
+                  {{ props.instance.getMainWeapon().getName() }}
                 </h1>
-                <weapon-card class="h-20 mb-3" :instance="props.player.getMainWeapon()"/>
                 <div class="flex items-center">
                   <font-awesome-icon class="text-indigo-500 mr-2" icon="fas fa-eye"/>
-                  <span class="text-indigo-300">+{{ props.player.getMainWeapon().addsPossibleRange() }} локаций</span>
+                  <span class="text-indigo-300">+{{ props.instance.getMainWeapon().addsPossibleRange() }} секторов</span>
                 </div>
                 <div class="flex items-center">
                   <font-awesome-icon class="text-red-600 mr-2" icon="fas fa-bolt"/>
-                  <span class="text-red-600">+{{ props.player.getMainWeapon().addsPossibleDamage() }} ед.</span>
+                  <span class="text-red-600">+{{ props.instance.getMainWeapon().addsPossibleDamage() }} ед.</span>
                 </div>
-              </div>
-              <div class="col-span-6 sm:col-span-3 flex flex-col items-end">
-                <h1 class="font-bold text-xl mb-3">
-                  Метательное
-                </h1>
-              </div>
-              <div class="col-span-6 sm:col-span-3 flex flex-col">
-                Предметы
+                <weapon-card class="h-20 mt-2" :instance="props.instance.getMainWeapon()"/>
               </div>
             </div>
           </div>

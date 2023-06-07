@@ -24,4 +24,6 @@ export class AbandonedDroidStationSector extends AbstractSector {
     public stepSound(): string {
         return require("@/assets/audio/characters/shared/footstep_metal.wav");
     }
+
+    dodgeChanceIncrement: number = 15
 }

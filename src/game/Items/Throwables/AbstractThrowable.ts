@@ -1,6 +1,7 @@
 import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {AbstractItem} from "@/game/Items/AbstractItem";
 
-export abstract class AbstractThrowable {
+export abstract class AbstractThrowable extends AbstractItem {
 
     public static THROWABLES_LIMIT: number = 3
 

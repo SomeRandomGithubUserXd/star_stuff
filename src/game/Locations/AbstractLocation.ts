@@ -6,9 +6,6 @@ import {AbstractMap} from "@/game/Maps/AbstractMap";
 
 export abstract class AbstractLocation {
 
-    public static readonly expForExploring: number = 150
-
-
     public static readonly movesRequired: number = 2
 
     public map: AbstractMap

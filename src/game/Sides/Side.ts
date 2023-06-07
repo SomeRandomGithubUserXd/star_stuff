@@ -17,14 +17,6 @@ export class Side {
         return this.icon;
     }
 
-    public getColor(): string {
-        if(this.isEvil) {
-            return "#dc2626"
-        } else {
-            return "#16a34a"
-        }
-    }
-
     constructor(name: string, icon: string, character: Character, isEvil: boolean = false) {
         this.name = name;
         this.icon = icon;

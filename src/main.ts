@@ -23,6 +23,7 @@ import {
     faWandMagic,
     faShield,
     faToolbox,
+    faCloudBolt,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -42,6 +43,7 @@ library.add(
     faWandMagic,
     faShield,
     faToolbox,
+    faCloudBolt,
 )
 
 createApp(App)

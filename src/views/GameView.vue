@@ -87,7 +87,7 @@ const map = ref(new Coruscant())
 watch(era, value => {
   const changeEraForPlayers = (players: Player[], side: Side) => {
     for (const player of players) {
-      player.side = side
+      player.switchSide(side)
     }
   }
   changeEraForPlayers(lightSidePlayers.value, value.lightSideInstance())
@@ -111,7 +111,7 @@ const openPlayerModal = (side: Side) => {
 }
 
 const storePlayer = (player: Player) => {
-  if (player.side.isEvil) {
+  if (player.isEvil) {
     darkSidePlayers.value.push(player)
   } else {
     lightSidePlayers.value.push(player)
@@ -130,7 +130,7 @@ const submit = () => {
   for (const player of [...lightSidePlayers.value, ...darkSidePlayers.value]) {
     player.id = id++
   }
-  game.value = new Game(era.value, map.value, lightSidePlayers.value, darkSidePlayers.value)
+  game.value = new Game(era.value, map.value, lightSidePlayers.value, darkSidePlayers.value, lightSidePlayers.value[0])
 }
 
 </script>

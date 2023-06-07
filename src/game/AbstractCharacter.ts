@@ -1,16 +1,45 @@
-import {Side} from "@/game/Sides/Side";
 import {AbstractMainWeapon} from "@/game/Items/Weapons/AbstractMainWeapon";
-import {BlasterE11} from "@/game/Items/Weapons/BlasterE11";
-import {IntRange} from "@/misc/Types";
+import {AbstractSector} from "@/game/Locations/AbstractSector";
+import {Character} from "@/game/Sides/Character/Character";
+import {PlayerInventory} from "@/game/Player/PlayerInventory";
 
 export abstract class AbstractCharacter {
-    public name: string
 
-    protected _health: number
+    public isDead: boolean = false
 
-    protected _totalExp: number
+    public abstract name: string
 
-    protected _mainWeapon: AbstractMainWeapon
+    protected abstract characterInstance: Character
+
+    public abstract isEvil: boolean
+
+    protected _sector: AbstractSector | null = null
+
+    protected abstract _health: number
+
+    protected abstract _totalExp: number
+
+    protected abstract _mainWeapon: AbstractMainWeapon
+
+    protected _inventory: PlayerInventory = new PlayerInventory()
+
+    public getInventoryInstance(): PlayerInventory {
+        return this._inventory
+    }
+
+    public abstract movesLeft: number
+
+    public getCharacter(): Character {
+        return this.characterInstance
+    }
+
+    public setSector(sector: AbstractSector): void {
+        this._sector = sector
+    }
+
+    public getSector(): AbstractSector | null {
+        return this._sector
+    }
 
     public setHealth(wantedHealth: number): void {
         this._health = wantedHealth
@@ -56,15 +85,11 @@ export abstract class AbstractCharacter {
         this._mainWeapon = mainWeapon
     }
 
-    protected constructor(name: string, health: number = 100, totalExp = 0) {
-        this.name = name;
-        this._health = health;
-        this._totalExp = totalExp;
-        this._mainWeapon = new BlasterE11()
-    }
-
     public getDodgeChange(): number {
-        return 1
+        let chance = 1
+        chance *= this.getLevel() / 2
+        chance += this._sector?.dodgeChanceIncrement || 0
+        return chance
     }
 
     public getDamagePossible(): number {

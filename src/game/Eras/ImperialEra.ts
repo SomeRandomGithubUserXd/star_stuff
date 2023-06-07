@@ -11,6 +11,7 @@ export class ImperialEra extends AbstractEra {
     darkSideInstance(): Side {
         const stormtrooper: Character = new Character(
             require("@/assets/pictures/icons/stormtrooper_player_icon.png"),
+            require("@/assets/pictures/icons/stormtrooper_player_icon.png"),
             new CharacterVoiceLines(
                 [],
                 [],
@@ -27,6 +28,7 @@ export class ImperialEra extends AbstractEra {
 
     lightSideInstance(): Side {
         const rebel: Character = new Character(
+            require("@/assets/pictures/icons/rebel_player_icon.png"),
             require("@/assets/pictures/icons/rebel_player_icon.png"),
             new CharacterVoiceLines(
                 [],

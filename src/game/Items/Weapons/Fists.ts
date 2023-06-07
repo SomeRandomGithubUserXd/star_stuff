@@ -2,6 +2,11 @@ import {AbstractMainWeapon} from "@/game/Items/Weapons/AbstractMainWeapon";
 import {ItemRarityEnum} from "@/game/Enums/ItemRarityEnum";
 
 export class Fists extends AbstractMainWeapon {
+
+    public fireSound(): string {
+        return require("@/assets/audio/weapons/Fists/Punch.mp3");
+    }
+
     public getRarityLevel(): ItemRarityEnum {
         return ItemRarityEnum.common
     }

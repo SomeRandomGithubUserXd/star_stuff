@@ -12,8 +12,8 @@ import "font-awesome/css/font-awesome.css"
 import {AbstractSector} from "@/game/Locations/AbstractSector";
 import EventIcon from "@/components/Game/Location/EventIcon.vue";
 import collect from "collect.js"
-import {NPC} from "@/game/NPC";
-import NpcIcon from "@/components/Game/NpcIcon.vue";
+import {AbstractNPC} from "@/game/NPC/AbstractNPC";
+import NpcIcon from "@/components/Game/NPC/NpcIcon.vue";
 
 const props = defineProps<{
   instance: AbstractLocation,
@@ -23,7 +23,7 @@ const props = defineProps<{
 
 const location = ref(props.instance)
 
-const emit = defineEmits(['moveToSector', 'discover', 'applyQuest'])
+const emit = defineEmits(['moveToSector', 'discover', 'applyQuest', 'openPlayerInventory'])
 
 const ctxMenus = ref(null)
 
@@ -50,16 +50,24 @@ const getOptionsForSector = (sector: AbstractSector) => {
     }
   ]
 }
+
+onMounted(() => {
+  for (const sector of props.instance.sectors) {
+    for (const character of sector.getCharacters()) {
+      if (character instanceof Player) props.instance.isDiscovered = true
+    }
+  }
+})
 </script>
 
 <template>
-  <div class="border border-solid border-white location">
+  <div class="location border border-solid border-gray-500">
     <tippy :content="location.isDiscovered ? location.getName() : '??????'">
       <div v-if="location.isDiscovered" class="content" :style="{background: `url(${location.getBackgroundImage()})`}">
         <div
             @contextmenu.prevent.stop="handleClick($event, sector)"
             @click="emit('moveToSector', sector)"
-            class="border p-1 flex flex-col border-solid sector border-gray-400 flex overflow-hidden"
+            class="p-1 flex flex-col sector flex overflow-hidden hover:scale-95"
             v-for="sector in location.sectors">
           <vue-simple-context-menu
               :element-id="'sector-menu-' + sector.id"
@@ -70,16 +78,23 @@ const getOptionsForSector = (sector: AbstractSector) => {
             <event-icon
                 v-if="sector.quests.length"
                 icon="fas fa-question-circle"/>
+            <div class="ml-auto text-sm text-green-600">
+              <span class="mr-0.5" style="text-shadow: 0 0 10px rgba(255,255,255,0.4) !important;">
+              +{{ sector.dodgeChanceIncrement }}
+              </span>
+              <font-awesome-icon icon="fas fa-shield"/>
+            </div>
           </div>
           <div class="flex gap-1">
             <template v-for="character of sector.getCharacters()">
               <template v-if="character instanceof Player">
                 <player-icon
-                    :is-current="props.game.currentPlayerIndex === character.id"
+                    @open-player-inventory="emit('openPlayerInventory', $event)"
+                    :is-current="props.game.getCurrentPlayer().id === character.id"
                     :instance="character"/>
               </template>
-              <template v-if="character instanceof NPC">
-                <npc-icon :instance="character"/>
+              <template v-if="character instanceof AbstractNPC">
+                <npc-icon :instance="character" :current-player-can-attack="game.canStartAFight(props.game.getCurrentPlayer(), character)"/>
               </template>
             </template>
           </div>
@@ -113,6 +128,7 @@ const getOptionsForSector = (sector: AbstractSector) => {
       width: 50%;
       height: 50%;
       background: rgba(0, 0, 0, 0.2);
+      transition: .2s all;
 
       &:hover {
         background: rgba(0, 0, 0, 0);
